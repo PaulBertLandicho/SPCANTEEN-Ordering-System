@@ -1,0 +1,1517 @@
+/* Admin dashboard styles - matching screenshot layout */
+body .content1 {
+    padding: 18px;
+}
+
+.dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.metric.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    display: flex;
+    align-items: center;
+}
+
+.metric .sales-icon img {
+    width: 44px;
+    height: 44px;
+}
+
+.metric .sales-txt {
+    margin-left: 12px;
+}
+.metric .header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #111827;
+}
+.metric .total-completed p {
+    margin: 4px 0 0;
+    color: #6b7280;
+}
+.metric .percentage-days {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.metric .percentage-days img {
+    width: 14px;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.chart-card.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.chart-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+.chart-controls .btn {
+    border: none;
+    background: #f3f4f6;
+    color: #111827;
+    padding: 6px 10px;
+    border-radius: 999px;
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.chart-controls .btn.active {
+    background: #111827;
+    color: white;
+}
+
+.chart-body {
+    padding-top: 6px;
+}
+.chart-body canvas {
+    width: 100% !important;
+    height: 320px !important;
+}
+
+/* small responsive tweaks */
+@media (max-width: 900px) {
+    .dashboard-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+body {
+    overflow: auto;
+}
+/* Navigation Bar CSS */
+
+.admin-navbar {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    width: 220px;
+    height: 100vh;
+    padding: 0 25px 0 25px;
+    position: fixed; /* pin navbar so it doesn't scroll */
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+#logo {
+    width: 250px;
+    margin-top: 30px;
+}
+
+.icon-bar a {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.icon-bar a:hover {
+    background-color: maroon;
+    color: white;
+    border-radius: 10px;
+}
+
+#logout {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.nav-btns {
+    margin-top: 24px;
+}
+
+#nav-txt {
+    margin-left: 10px;
+    font-weight: 100;
+    font-family: "Montserrat";
+}
+
+.copyright {
+    margin-top: 7em;
+    text-align: center;
+}
+
+/* Content */
+
+.content {
+    margin: 2rem 0 0 240px; /* space for fixed 220px navbar + padding */
+    width: calc(100% - 260px);
+    min-height: 40rem;
+}
+
+.content1 {
+    margin: 2rem 0 0 350px; /* space for fixed navbar */
+    /* width: 70rem; */
+    min-height: 40rem;
+}
+
+/* Dashboard */
+
+.row1 {
+    display: flex;
+    height: 135px;
+    margin: 2rem 0 0 0;
+}
+
+.box1 {
+    background-color: white;
+    height: 7rem;
+    width: 15rem;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px #888888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.box2 {
+    background-color: white;
+    height: 7rem;
+    width: 15rem;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px #888888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+.box3 {
+    background-color: white;
+    height: 7rem;
+    width: 15rem;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px #888888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+.box4 {
+    background-color: white;
+    height: 7rem;
+    width: 15rem;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px #888888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+.box-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#box-icon {
+    height: 5rem;
+    margin-left: 30px;
+}
+
+.sales-txt {
+    height: 5rem;
+    width: 8rem;
+    padding: 5px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+h3 {
+    font-size: 25px;
+    font-weight: bolder;
+    font-family: "Montserrat";
+}
+
+.total-completed {
+    margin-top: 10px;
+}
+
+#days {
+    font-size: 10px;
+    opacity: 0.5;
+    text-align: center;
+    margin-left: 4px;
+}
+
+#arrow-icon {
+    height: 14px;
+}
+
+.percentage-days {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Product List */
+
+.add-header {
+    width: 60rem;
+    margin: 5rem 0 0 69px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-product-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 4px #888888;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#add-txt {
+    margin-left: 15px;
+    font-size: 18px;
+    font-family: "Montserrat";
+}
+
+#add-btn {
+    font-size: 25px;
+}
+
+#search {
+    padding: 6px;
+    font-size: 17px;
+    border: none;
+    border-radius: 6px 0 0 6px;
+}
+
+.search-container .search-button {
+    float: right;
+    padding: 8.1px 10px;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button {
+    background-color: maroon;
+    color: white;
+    border-radius: 0 6px 6px 0;
+}
+
+.search-container .search-button:hover {
+    background: red;
+    color: white;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 60px;
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+.product-list::-webkit-scrollbar {
+    display: none;
+}
+
+.product {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    margin: 11.25px;
+    position: relative;
+}
+
+#product-img {
+    width: 222px;
+    height: 222px;
+    border-radius: 10px;
+}
+
+.label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    width: 202px;
+    height: auto;
+    bottom: 0;
+    margin-top: 100px;
+    border-radius: 0 0 10px 10px;
+    /* background: linear-gradient(to top, maroon, transparent); */
+    color: white;
+    padding: 12px 10px;
+}
+
+h3 {
+    margin: 0;
+    font-size: 20px;
+    white-space: nowrap;
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icon-container {
+    display: flex;
+    gap: 10px;
+    font-size: 32px;
+    color: maroon;
+    width: 54px;
+    justify-content: space-evenly;
+}
+
+.edit-delete-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tabler-edit {
+    background-color: #fff;
+    color: maroon;
+    border-radius: 5px;
+    font-family: "Montserrat";
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.trash-outline {
+    background-color: #fff;
+    color: maroon;
+    border-radius: 5px;
+    font-family: "Montserrat";
+    cursor: pointer;
+    margin-left: 4px;
+    font-size: 20px;
+}
+
+.chartContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#myChart {
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+/* Add Product Modal CSS*/
+
+/* Details button badge */
+.details-badge {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Status color mappings (match seeded statuses) */
+.details-badge.status-preparing {
+    background: #ffd700;
+}
+.details-badge.status-prepared {
+    background: #008000;
+}
+.details-badge.status-successful {
+    background: #10b981;
+}
+.details-badge.status-cancelled {
+    background: #ef4444;
+}
+.details-badge.status-pending {
+    background: #f59e0b;
+}
+.details-badge.status-new {
+    background: #3b82f6;
+}
+.details-badge.status-ondelivery {
+    background: #8b5cf6;
+}
+.details-badge.status-completed {
+    background: #059669;
+}
+.details-badge.status-unknown {
+    background: #6b7280;
+}
+
+/* Ensure Details link text aligns */
+.action-btn.details-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal_product-list {
+    display: flex;
+    width: 650px;
+    height: 40vh;
+    position: fixed;
+    top: 54%;
+    left: 59%;
+    transform: translate(-50%, -50%);
+    padding: 2.4rem 2rem 3rem;
+    background: #fff;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+}
+
+.orders-section {
+    margin-top: 22px;
+}
+.orders-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+.orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.orders-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+.orders-controls .btn {
+    border: none;
+    background: #f3f4f6;
+    color: #111827;
+    padding: 6px 10px;
+    border-radius: 999px;
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.orders-controls .btn.active {
+    background: #111827;
+    color: white;
+}
+.orders-body {
+    overflow: auto;
+    max-height: 60vh;
+    padding-top: 6px;
+}
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.orders-table thead th {
+    padding: 12px 10px;
+    text-align: left;
+    color: #6b7280;
+    font-weight: 600;
+    border-bottom: 1px solid #eef2f7;
+}
+.orders-table tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #111827;
+}
+.order-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #fff;
+}
+.status-new {
+    background: #111827;
+}
+.status-ondelivery {
+    background: #60a5fa;
+}
+.status-pending {
+    background: #f59e0b;
+}
+.status-completed {
+    background: #10b981;
+}
+.action-btn {
+    color: #6b7280;
+    text-decoration: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+}
+
+/* Statuses from statuses table */
+.status-preparing {
+    background: #f97316;
+} /* orange */
+.status-prepared {
+    background: #f59e0b;
+} /* amber */
+.status-successful {
+    background: #10b981;
+} /* green */
+.status-cancelled {
+    background: #ef4444;
+} /* red */
+
+@media (max-width: 900px) {
+    .dashboard-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.modal_product-list.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-container {
+    display: flex;
+    justify-content: center;
+}
+
+.modal-container-add,
+.modal-container-edit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.modal-icon {
+    position: relative;
+    top: 20px;
+}
+
+.img-box-fill {
+    width: 260px;
+    height: 260px;
+    font-size: 220px;
+    background-color: rgb(216, 215, 215);
+    box-shadow: inset 0 1px 10px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    margin-left: 20px;
+}
+
+#img-box-fill {
+    width: 260px;
+    height: 260px;
+    border-radius: 20px;
+}
+
+.img-box-fill-edit {
+    width: 260px;
+    height: 260px;
+    font-size: 220px;
+    background-color: rgb(216, 215, 215);
+    box-shadow: inset 0 1px 10px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    margin-left: 20px;
+}
+
+#img-box-fill-edit {
+    width: 260px;
+    height: 260px;
+    border-radius: 20px;
+}
+
+.add-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: maroon;
+    color: white;
+    width: 260px;
+    height: 58px;
+    top: 89%;
+    left: 53.4%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    border-radius: 0 0 20px 20px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+#add-icon {
+    font-size: 46px;
+    color: white;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    margin: 30px 0 0 120px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.product-name,
+.product-price,
+.product-time {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 122%;
+}
+
+.product-availablity {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 44px;
+    font-size: 14px;
+}
+
+.available {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.not-available {
+    display: flex;
+    align-items: center;
+}
+
+.availability-btn {
+    accent-color: maroon;
+    transform: scale(0.98);
+    margin-top: 2.5px;
+    cursor: pointer;
+}
+
+.select-categories {
+    margin-top: 20px;
+    margin-left: 55px;
+    width: 101%;
+    z-index: 9999;
+    position: sticky;
+    top: 10;
+}
+
+.product-categories {
+    margin-top: 10px;
+    width: 101%;
+}
+
+.product-name label,
+.product-price label,
+.product-time label {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+#select-category {
+    font-size: 14px;
+}
+
+#product-name,
+#product-price,
+#product-time {
+    height: 35px;
+    border: none;
+    border-bottom: 2px solid maroon;
+    border-radius: 0;
+    padding-left: 4px;
+    flex-grow: 2;
+    color: maroon;
+    font-size: 16px;
+}
+
+#product-categories {
+    height: 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-grow: 2;
+    font-size: 12px;
+}
+
+.sorting-categories {
+    margin-right: 10px;
+    height: 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-grow: 2;
+    font-size: 12px;
+}
+#product-name:focus,
+#product-price:focus,
+#product-time:focus {
+    outline: none;
+}
+
+#product-name::placeholder,
+#product-price::placeholder,
+#product-time::placeholder {
+    color: maroon;
+}
+
+#product-categories option {
+    color: maroon;
+}
+
+#product-name::placeholder,
+#product-price::placeholder,
+#product-time::placeholder {
+    color: maroon;
+    text-align: center;
+}
+
+.modal-btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#save {
+    background-color: maroon;
+    color: white;
+    padding: 13px 50px 13px 50px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: "Montserrat";
+}
+
+#close {
+    position: absolute;
+    top: 0;
+    margin: 14px 0 0 16px;
+    color: maroon;
+    font-size: 34px;
+    cursor: pointer;
+    font-family: "Montserrat";
+}
+
+.save-btn {
+    margin: 20px 66px 0 0;
+}
+
+/* Edit Product Modal CSS */
+
+.modal_edit-list {
+    display: flex;
+    width: 650px;
+    height: 40vh;
+    position: fixed;
+    top: 54%;
+    left: 59%;
+    transform: translate(-50%, -50%);
+    padding: 2.4rem 2rem 3rem;
+    background: #fff;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+}
+
+.modal_edit-list.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* QR Scanner Modal CSS */
+
+.modal_qr-scanner {
+    display: flex;
+    width: 25rem;
+    height: 20rem;
+    position: fixed;
+    top: 54%;
+    left: 59%;
+    transform: translate(-50%, -50%);
+    padding: 2.4rem 2rem 2rem;
+    background: #fff;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+#reader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20rem;
+    height: 40vh;
+}
+
+.modal_qr-scanner.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Order Details Modal CSS */
+
+.modal_orders-list {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    position: fixed;
+    top: 54%;
+    left: 59%;
+    transform: translate(-50%, -50%);
+    padding: 2.4rem 2rem 2rem;
+    background: #fff;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+}
+
+.modal_orders-list.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.order-transaction-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid lightgray;
+    padding: 4px 0 10px 0;
+}
+
+.orders-details-header {
+    display: flex;
+    align-items: center;
+}
+
+.orders-pending-icon {
+    margin: 0 4px 0 4px;
+    color: red;
+}
+
+#order-status {
+    font-weight: 900;
+}
+
+.orders-date-payment {
+    display: flex;
+    margin: 8px 0 14px 0;
+}
+
+.orders-transaction-date,
+.orders-transaction-payment {
+    display: flex;
+    flex-direction: column;
+}
+
+#order-date,
+#payment-type {
+    font-weight: 900;
+}
+
+.transaction-details-txt {
+    color: maroon;
+    font-weight: bolder;
+    border-bottom: 2px solid lightgray;
+    padding-bottom: 8px;
+    margin: 12px 0 14px 0;
+}
+
+.orders-transaction-details {
+    display: flex;
+}
+
+.orders-transaction-payment {
+    margin-left: 152px;
+}
+
+.orders-order-details {
+    margin-left: 200px;
+}
+
+.orders-id-username,
+.orders-order-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-product_list-txt {
+    color: maroon;
+    font-weight: 900;
+    border-bottom: 2px solid lightgray;
+    padding-bottom: 2px;
+    margin: 20px 0 14px 0;
+}
+
+.orders-product_list-qr_code {
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.orders-products-list {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+#order-amount {
+    color: maroon;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.orders-status {
+    padding-right: 8px;
+    margin-left: 14px;
+    display: flex;
+    align-items: center;
+    background-color: #e5e4e2;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.orders-products-txt {
+    font-size: 14px;
+    font-weight: 900;
+    margin-right: 18px;
+}
+
+.close-modal4 {
+    width: 8px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.action-container {
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.order-action {
+    display: flex;
+    justify-content: space-between;
+    width: 20rem;
+}
+
+.order-action button {
+    cursor: pointer;
+}
+
+#ready-order {
+    color: maroon;
+    font-weight: 900;
+    margin-left: 20px;
+}
+
+#close-details {
+    position: absolute;
+    top: 0;
+    margin: 14px 0 0 488px;
+    color: maroon;
+    font-size: 34px;
+    cursor: pointer;
+    font-family: "Montserrat";
+}
+
+#complete-order,
+#cancel-order {
+    background-color: maroon;
+    color: white;
+    padding: 8px 12px 8px 12px;
+    border-radius: 4px;
+}
+
+/* Transaction Details Modal CSS */
+
+.modal_transactions-history {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 70vh;
+    position: fixed;
+    top: 54%;
+    left: 59%;
+    transform: translate(-50%, -50%);
+    padding: 2.4rem 2rem 2rem;
+    background: #fff;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+}
+
+.modal_transactions-history.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.order-transactions-details {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid lightgray;
+    padding: 4px 0 10px 0;
+}
+
+.transactions-details {
+    border-bottom: 1px solid black;
+    padding-bottom: 2px;
+}
+
+.transactions-date-payment {
+    display: flex;
+}
+
+.transactions-success-icon {
+    margin-left: 10px;
+    color: green;
+}
+
+.transactions-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.transactions-payment {
+    display: flex;
+    flex-direction: column;
+}
+
+.close-modal5 {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Order-List CSS */
+
+.qr-btn {
+    display: flex;
+    align-items: center;
+    padding: 2px 16px 2px 2px;
+    background-color: white;
+    box-shadow: 1px 1px 4px #888888;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#qr-code-scanner {
+    font-size: 32px;
+    margin-right: 16px;
+}
+
+.add-header-orders {
+    width: 70rem;
+    margin: 5rem 0 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-container-orders {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+#search {
+    padding: 6px;
+    font-size: 17px;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    box-shadow: 1px 1px 4px #888888;
+}
+
+.search-container-orders .search-button-orders {
+    float: right;
+    padding: 8px 10px;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button-orders {
+    background-color: maroon;
+    color: white;
+    border-radius: 0 6px 6px 0;
+    box-shadow: 1px 1px 4px #888888;
+}
+
+.search-container-orders .search-button-orders:hover {
+    background: red;
+    color: white;
+}
+
+.transaction-container1 {
+    width: 100%;
+    height: 90px;
+    background-color: white;
+    box-shadow: 1px 1px 4px #888888;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.orders {
+    margin-top: 30px;
+    max-height: 67vh;
+    overflow-y: auto;
+    padding: 0 4px 0 2px;
+}
+
+.orders::-webkit-scrollbar {
+    display: none;
+}
+
+.orders-details {
+    transform: translateY(-20%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 30px 0 60px;
+    font-weight: bold;
+}
+
+.orders-detailed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 30px 0 60px;
+    font-weight: bold;
+}
+
+.orders-detail {
+    margin: 2px 0 0 22px;
+    color: red;
+    font-size: 20px;
+}
+
+#orders-header {
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.55;
+}
+
+#orders-details {
+    background-color: maroon;
+    color: white;
+    padding: 6px 26px 8px 26px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Transaction History CSS */
+
+.add-header-transaction {
+    width: 66rem;
+    margin: 5rem 0 0 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-container-transaction {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+#search {
+    padding: 6px;
+    font-size: 17px;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    box-shadow: 1px 1px 4px #888888;
+}
+
+.search-container-transaction .search-button-transaction {
+    float: right;
+    padding: 8px 10px;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button-transaction {
+    background-color: maroon;
+    color: white;
+    border-radius: 0 6px 6px 0;
+    box-shadow: 1px 1px 4px #888888;
+}
+
+.search-container-transaction .search-button-transaction:hover {
+    background: red;
+    color: white;
+}
+
+.transaction {
+    margin-top: 30px;
+    max-height: 67vh;
+    overflow-y: auto;
+    padding: 0 4px 0 2px;
+}
+
+.transaction::-webkit-scrollbar {
+    display: none;
+}
+
+.transaction-container2 {
+    width: 100%;
+    height: 90px;
+    background-color: white;
+    box-shadow: 1px 1px 4px #888888;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.transaction-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px 30px 0 60px;
+    font-weight: bold;
+}
+
+.transaction-detail {
+    position: absolute;
+    margin: 2px 0 0 22px;
+    color: green;
+    font-size: 20px;
+}
+
+#transaction-header {
+    position: absolute;
+    transform: translateY(-160%);
+    font-size: 12px;
+    opacity: 0.55;
+}
+
+#transaction-details {
+    background-color: maroon;
+    color: white;
+    padding: 6px 26px 8px 26px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Manage User */
+
+#profile-picture {
+    width: 150px;
+    height: 140px;
+}
+
+th,
+td {
+    text-align: center;
+}
+
+/* User Management Modal CSS */
+
+.modal_user-edit {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: 30.5vh;
+    position: fixed;
+    top: 54%;
+    left: 59%;
+    transform: translate(-50%, -50%);
+    padding: 2.4rem 2rem 2rem;
+    background: #fff;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+}
+
+.modal_user-edit.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.manage-user-profile-modal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 360px;
+}
+
+.manage-user-edit {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.manage-username,
+.manage-email,
+.manage-student-id {
+    font-size: 12px;
+}
+
+.manage-user-info {
+    background-color: #e5e4e2;
+    color: #71797e;
+    border: none;
+    padding: 8px 8px 8px 4px;
+    border-radius: 4px;
+}
+
+#user-email {
+    margin-bottom: 4px;
+}
+
+.role {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.manage-student {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    font-size: 14px;
+}
+
+.manage-faculty {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    font-size: 14px;
+}
+
+.manage-admin {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.manage-user-student,
+.manage-user-faculty {
+    cursor: pointer;
+    accent-color: maroon;
+    transform: scale(1);
+}
+
+.manage-save {
+    display: flex;
+    justify-content: center;
+}
+
+#manage-save {
+    background-color: maroon;
+    color: white;
+    padding: 10px 24px 10px 24px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.close-modal6 {
+    cursor: pointer;
+    margin-left: 328px;
+}
+
+/* Fade-Out Transition */
+
+#splash-screen {
+    background-color: #e5e4e2;
+    color: #fff;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    transition: opacity 1.5s ease;
+}
+
+#content {
+    display: none;
+}

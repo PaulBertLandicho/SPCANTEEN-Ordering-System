@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter";
+}
+
+body {
+    background-color: #e5e4e2;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    width: 22rem;
+    height: 50px;
+    border-bottom: 2px solid maroon;
+    margin: 30px 16px;
+}
+
+.input-container label {
+    position: absolute;
+    top: 65%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: maroon;
+    font-weight: 500;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.input-container input:focus ~ label,
+.input-container input:valid ~ label {
+    top: 8px;
+}
+
+.input-container input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    margin: 10px 0 0 5px;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    color: maroon;
+    font-weight: 600;
+}
+
+.btn {
+    width: 110px;
+    height: 50px;
+    margin-top: 40px;
+    font-size: 17px;
+    background-color: maroon;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: "Montserrat";
+}
+
+button {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    background-color: transparent;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+img {
+    object-fit: cover;
+}
+
+input[type="radio"] {
+    accent-color: maroon;
+}
+
+/* Category active indicator */
+.categories .category .icon-text {
+    margin-top: 6px;
+    color: #333;
+    font-size: 14px;
+}
+.categories .category.active .icon-text {
+    color: maroon; /* green for active */
+    position: relative;
+}
+.categories .category.active .icon-text::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: #00ff7f;
+    border-radius: 50%;
+    margin: 6px auto 0;
+}
+
+/* Empty state container used across pages (favorites, history, products) */
+.container-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+.container-empty img {
+    max-width: 220px;
+    width: 40%;
+    height: auto;
+    opacity: 0.95;
+}
+.container-empty .empty-text,
+.no-products,
+.no-history {
+    margin-top: 12px;
+    color: #666666;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 600;
+}

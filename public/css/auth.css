@@ -1,0 +1,293 @@
+/* Login CSS */
+
+.container {
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  justify-content: space-between;
+  width: 65rem;
+}
+
+#logo {
+  height: 300px;
+}
+
+.logo1 {
+  margin-top: -27px;
+}
+
+.logo2 {
+  margin-top: 40px;
+}
+
+#forgot-password {
+  color: maroon;
+  text-decoration: none;
+  margin: 0 0 50px 230px;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+}
+
+#register-txt {
+  margin-top: 50px;
+  text-align: center;
+}
+
+#login-btn {
+  text-decoration: none;
+  color: maroon;
+}
+
+/* Registration CSS */
+
+.registration-form {
+  display: flex;
+  justify-content: space-between;
+  width: 65rem;
+}
+
+.register {
+  display: flex;
+  justify-content: center;
+}
+
+#login-txt {
+  margin-top: 40px;
+  text-align: center;
+}
+
+#register-btn {
+  text-decoration: none;
+  color: maroon;
+}
+
+@media only screen and (max-width: 600px) {
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 1rem;
+  }
+
+  .registration-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  #logo {
+    height: 250px;
+  }
+
+  .logo {
+    margin: 0;
+  }
+}
+
+/* Profile Setup CSS */
+
+.info {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.profile-picture {
+  position: relative;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.form-setup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#avatar {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 1px solid maroon;
+}
+
+#pfp {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+#fileInput {
+  display: none;
+}
+
+.camera-icon-bg {
+  width: 40px;
+  height: 40px;
+  background-color: maroon;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.cam {
+  color: white;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.upload-txt {
+  font-size: 35px;
+  font-weight: 500;
+  color: maroon;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.option {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 40px;
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid gray;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+}
+
+input[type="radio"]:checked {
+  background-color: maroon;
+}
+
+.note {
+  color: #a9a9a9;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.submit-btn {
+  display: flex;
+  justify-content: center;
+}
+
+/* Icons */
+
+i {
+  color: maroon;
+  font-size: 20px;
+  margin: 24px 8px 0 0;
+  cursor: pointer;
+}
+
+/* Intro CSS */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter";
+}
+
+.onboarding-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  height: 100vh;
+  width: 100vw;
+}
+
+.onboarding-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.onboarding-slide {
+  flex: 0 0 84%;
+  scroll-snap-align: start;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.onboarding-slide h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.onboarding-slide p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.onboarding-slide button {
+  background-color: white;
+  color: #333;
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.slider {
+  display: none;
+}
+
+.dots {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dots label {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.dots label.active {
+  background-color: maroon;
+}
+
+/* Fade-Out Transition */
+
+#splash-screen {
+  background-color: #e5e4e2;
+  color: #fff;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  transition: opacity 1.5s ease;
+}
+
+#content {
+  display: none;
+}
