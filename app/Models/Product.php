@@ -27,15 +27,18 @@ class Product extends Model
         return ucwords($value);
     }
 
-    public function category() {
-        return $this->belongsTo(Category::class,'category_id');
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function cart(){
+    public function cart()
+    {
         return $this->belongsToMany(Cart::class);
     }
 
-    public function favorite(){
+    public function favorite()
+    {
         return $this->belongsToMany(Favorite::class);
     }
 }

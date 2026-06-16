@@ -16,19 +16,23 @@ class Order extends Model
         'amount',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function status() {
+    public function status()
+    {
         return $this->belongsTo(Status::class);
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->belongsTo(Payment::class);
     }
 
-    public function carts() {
+    public function carts()
+    {
         return $this->hasMany(Cart::class);
     }
 }

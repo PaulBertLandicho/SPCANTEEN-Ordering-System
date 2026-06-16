@@ -10,13 +10,19 @@ use Illuminate\Http\Request;
 class FavoriteController extends Controller
 {
     public function index()
-    {   
+    {
         $userId = auth()->user()->id;
 
         $cartData = Cart::where('user_id', $userId)->whereNull('order_id')->get();
         $productCount = $cartData->count();
 
-        $favorites = Favorite::where('user_id', $userId)->get();
+        $favorites = Favorite::where('user_id', $userId)->with('product')->whereHas('product', function ($query) {
+            $query->where('availability', 1);
+        })->get();
+
+        foreach ($favorites as $favorite) {
+            $favorite['product_name'] = $favorite->product->name;
+        }
 
         return view('user.favorite', compact('favorites', 'productCount'));
     }
@@ -27,7 +33,7 @@ class FavoriteController extends Controller
         $userId = auth()->user()->id;
 
         $checkFavorite = Favorite::where('user_id', $userId)->where('product_id', $productId)->first();
-        
+
         if ($checkFavorite) {
             $checkFavorite->delete();
             return response()->json(false);
@@ -35,26 +41,26 @@ class FavoriteController extends Controller
             if (!$product) {
                 return response()->json(['error' => 'Invalid product ID'], 400);
             } else {
-    
+
                 $favorite = new Favorite();
-    
+
                 $favorite->user_id = $userId;
                 $favorite->product_id = $productId;
-    
+
                 $favorite->save();
-    
+
                 return response()->json(true);
-    
             }
         }
     }
 
-    public function showFavorite($productId) {
+    public function showFavorite($productId)
+    {
 
         $userId = auth()->user()->id;
 
         $checkFavorite = Favorite::where('user_id', $userId)->where('product_id', $productId)->first();
-        
+
         if ($checkFavorite) {
             return response()->json(true);
         } else {

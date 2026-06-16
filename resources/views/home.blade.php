@@ -184,7 +184,7 @@
                 </div>
                 <div class="body">
                     <img id="selling-image" src="images/product/default.jpg" alt="default">
-                    <button class="heart-button" id="heart-button">
+                    <button type="button" class="heart-button" id="heart-button">
                         <iconify-icon id="heart-icon" icon="material-symbols:favorite"></iconify-icon>
                     </button>
                     <div class="product-detail">
@@ -193,12 +193,12 @@
                     </div>
                     <div class="modal-btns">
                         <div class="quantity-btns">
-                            <button class="quantity-minus" id="quantity-minus">
+                            <button type="button" class="quantity-minus" id="quantity-minus">
                                 <iconify-icon icon="ph:minus"></iconify-icon>
                             </button>
                             <input type="number" id="input-quantity" min="1" value="1" style="display: none;">
                             <span id="modal-quantity">1</span>
-                            <button class="quantity-plus" id="quantity-plus">
+                            <button type="button" class="quantity-plus" id="quantity-plus">
                                 <iconify-icon icon="ph:plus"></iconify-icon>
                             </button>
                         </div>
@@ -215,8 +215,8 @@
         <div class="product-container" data-category-id="{{ $product->category_id ?? 0 }}">
             <div class="product-content">
                 <div class="product-image">
-                    <button class="show-modal" data-product="{{$product}}"><img id="product-image" src="images/product/{{$product->image}}" alt="{{$product->name}}"></button>
-                    <button class="add-cart" id="add-cart" data-product="{{$product}}">
+                    <button class="show-modal" data-product='@json($product)'><img id="product-image" src="images/product/{{$product->image}}" alt="{{$product->name}}"></button>
+                    <button class="add-cart" data-product='@json($product)'>
                         <iconify-icon id="add-icon" icon="ph:plus"></iconify-icon>
                     </button>
                 </div>

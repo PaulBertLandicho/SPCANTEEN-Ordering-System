@@ -122,12 +122,7 @@
         bottomSheet.classList.toggle("fullscreen", height === 100);
     };
 
-    const hideBottomSheet = () => {
-        bottomSheet.classList.remove("show");
-        document.body.style.overflowY = "auto";
-        document.getElementById("add-2-cart").setAttribute('data-product-id', '');
-        currentQuantity = 1;
-    };
+
 
     const dragStart = (e) => {
         isDragging = true;

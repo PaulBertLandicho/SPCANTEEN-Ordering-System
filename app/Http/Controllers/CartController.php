@@ -21,7 +21,7 @@ class CartController extends Controller
         $totalQuantity = 0;
         $totalPrice = 0;
 
-        foreach($carts as $cart) {
+        foreach ($carts as $cart) {
             $cart['sum'] = $cart->product->price * $cart->quantity;
             $totalQuantity += $cart->quantity;
             $totalPrice += $cart['sum'];
@@ -64,7 +64,6 @@ class CartController extends Controller
 
             return response()->json($productId);
         }
-
     }
 
     public function SingleStoreToCart($productId)
@@ -82,7 +81,6 @@ class CartController extends Controller
 
             $productCount = $cartData->count();
             return response()->json($productCount);
-
         } else {
 
             $userId = auth()->user()->id;
@@ -100,7 +98,6 @@ class CartController extends Controller
             $productCount = $cartData->count();
             return response()->json($productCount);
         }
-
     }
 
 
@@ -145,7 +142,7 @@ class CartController extends Controller
         return response()->json($totalPrice);
     }
 
-    public function addQuantity(Request $request, $cartId) 
+    public function addQuantity(Request $request, $cartId)
     {
         $quantity = $request->query('quantity');
         $cart = Cart::where('id', $cartId)->whereNull('order_id')->first();
@@ -158,7 +155,7 @@ class CartController extends Controller
         return response()->json($sum);
     }
 
-    public function minusQuantity(Request $request, $cartId) 
+    public function minusQuantity(Request $request, $cartId)
     {
         $quantity = $request->query('quantity');
         $cart = Cart::where('id', $cartId)->whereNull('order_id')->first();
@@ -191,7 +188,7 @@ class CartController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($cartId)
-    {   
+    {
         $userId = auth()->user()->id;
         $cart = Cart::where('id', $cartId)->whereNull('order_id')->first();
 
