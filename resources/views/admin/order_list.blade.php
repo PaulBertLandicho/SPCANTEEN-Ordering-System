@@ -134,6 +134,9 @@
 </div>
 
 <script>
+    let scanningLocked = false;
+    let lastScannedCode = null;
+
     const openModal3 = document.querySelector(".open-modal3");
     const closeModal3 = document.querySelector(".close-modal3");
     const qrscannerModal = document.querySelector(".modal_qr-scanner");
@@ -144,17 +147,44 @@
             qrscannerModal.classList.add("active");
 
             function onScanSuccess(decodedText, decodedResult) {
-                console.log("Scanned");
 
-                document.getElementById("orders-products-list").innerHTML = "";
-                document.getElementById("qrcode").innerHTML = "";
-                document.getElementById("complete-order").dataset.orderId = "";
-                document.getElementById("cancel-order").dataset.orderId = "";
-                document.getElementById("ready-order").dataset.orderId = "";
-                document.getElementById("order-status").dataset.orderId = "";
+                // 🚫 BLOCK MULTIPLE SCANS
+                if (scanningLocked) return;
+
+                // 🚫 BLOCK SAME QR REPEATED TRIGGERS
+                if (decodedText === lastScannedCode) return;
+
+                scanningLocked = true;
+                lastScannedCode = decodedText;
+
+                // auto unlock after 3 seconds
+                setTimeout(() => {
+                    scanningLocked = false;
+                }, 3000);
 
                 const orderId = decodedText;
 
+                function renderProducts(products) {
+                    const list = document.getElementById('orders-products-list');
+
+                    // 🚫 HARD RESET (MOST IMPORTANT LINE)
+                    list.innerHTML = '';
+
+                    const seen = new Set();
+
+                    products.forEach(p => {
+                        const key = `${p.product_id}-${p.product_name}`;
+
+                        if (seen.has(key)) return;
+                        seen.add(key);
+
+                        const div = document.createElement('div');
+                        div.className = 'orders-products-txt';
+                        div.innerHTML = `<span>${p.product_name} x${p.product_quantity}</span>`;
+
+                        list.appendChild(div);
+                    });
+                }
                 document.getElementById("complete-order").dataset.orderId = orderId;
                 document.getElementById("cancel-order").dataset.orderId = orderId;
                 document.getElementById("ready-order").dataset.orderId = orderId;
@@ -207,7 +237,7 @@
                             text: `${data.id}`,
                             width: 50,
                             height: 50,
-                            colorDark: "#000000",
+                            colorDark: "maroon",
                             colorLight: "#ffffff",
                             correctLevel: QRCode.CorrectLevel.H
                         });

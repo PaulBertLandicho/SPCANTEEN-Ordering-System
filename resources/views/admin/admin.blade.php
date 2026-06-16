@@ -551,7 +551,7 @@
     <div class="order-transaction-details">
         <div class="orders-details-header">
             <div class="order-amount">
-                <span id="order-amount">₱0.00</span>
+                <span id="order-amount">₱135.00 PHP</span>
             </div>
             <div class="orders-status">
                 <iconify-icon id="modal-circle" icon="material-symbols-light:circle" class="orders-pending-icon"></iconify-icon>
@@ -563,33 +563,35 @@
     <div class="orders-date-payment">
         <div class="orders-transaction-date">
             <span>Transaction Date</span>
-            <span id="order-date">-</span>
+            <span id="order-date">02/11/24</span>
         </div>
         <div class="orders-transaction-payment">
             <span>Payment Type</span>
-            <span id="payment-type">-</span>
+            <span id="payment-type">GCash</span>
         </div>
     </div>
     <span class="transaction-details-txt">Transaction Details</span>
     <div class="orders-transaction-details">
-        <div class="orders-details-header">
-            <div class="order-id-username">
-                <span>Order ID</span>
-                <span>Username</span>
-                <span>School ID</span>
-                <span>Role</span>
-            </div>
+        <div class="orders-id-username">
+            <span>Order ID</span>
+            <span>Username</span>
+            <span>School ID</span>
+            <span>Role</span>
         </div>
         <div class="orders-order-details">
-            <span id="order-id">-</span>
-            <span id="user-name">-</span>
-            <span id="user-school-id">-</span>
-            <span id="role-name">-</span>
+            <span id="order-id">SPC2024-69</span>
+            <span id="user-name">Romarc Bongcaron</span>
+            <span id="user-school-id">2022-2022</span>
+            <span id="role-name">STUDENT</span>
         </div>
     </div>
     <span class="transaction-product_list-txt">Product List</span>
     <div class="orders-product_list-qr_code">
-        <div id="orders-products-list" class="orders-products-list"></div>
+        <div id="orders-products-list" class="orders-products-list">
+            <!-- <div id="orders-products-txt" class="orders-products-txt">
+                    <span></span>
+                </div> -->
+        </div>
         <div class="orders-qr-code">
             <div id="qrcode"></div>
         </div>
@@ -603,6 +605,7 @@
             <button id="cancel-order" data-order-id="" onclick="cancelOrder(this.dataset.orderId)">Cancel Order</button>
         </div>
     </div>
+</div>
 </div>
 
 <script>
