@@ -784,7 +784,7 @@
     margin-top: 6px;
 }
 
-#menu-icons {
+#nav-icons {
     font-size: 38px;
     color: white;
     margin-left: 8px;
@@ -867,6 +867,13 @@
     margin: 3px 0 0 0.5px;
 }
 
+.row.active #nav-icons {
+    color: #00ff7f;
+}
+
+.row.active #nav-txt {
+    color: #00ff7f;
+}
 /* History CSS */
 
 .history-content {

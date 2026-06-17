@@ -25,7 +25,7 @@
     <script type="text/javascript" src="{{ asset('js/qrcode.js') }}"></script>
 </head>
 
-<body>
+<body data-page="@yield('page')">
     @yield('content')
 </body>
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>

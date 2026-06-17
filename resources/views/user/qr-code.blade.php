@@ -20,6 +20,9 @@
             <img id="prep-animation" src="images/Preparing.gif" alt="">
             <span id="preparing-txt">We already preparing your order <br> please wait.</span>
             @endif
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
             <script type="text/javascript">
                 // Poll order status every 3 seconds and update UI in-place
                 (function() {
@@ -73,6 +76,8 @@
                         qrCreated = false;
                     }
 
+                    let successShown = false;
+
                     async function pollStatus() {
                         try {
                             const res = await fetch(`/order/status/${orderId}`);
@@ -110,8 +115,22 @@
                                 // preparing -> show animation
                                 showPreparing();
                             } else if (newStatus === 3) {
-                                // successful -> redirect to home
-                                window.location.href = '/';
+                                if (!successShown) {
+                                    successShown = true;
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Order Completed!',
+                                        text: 'Your order has been successfully completed.',
+                                        confirmButtonColor: '#00C853',
+                                        timer: 2500,
+                                        timerProgressBar: true,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        window.location.href = '/';
+                                    });
+                                }
+
                             } else if (newStatus === 4) {
                                 // cancelled -> alert and redirect
                                 if (statusEl) statusEl.innerText = data.status_name || 'Cancelled';

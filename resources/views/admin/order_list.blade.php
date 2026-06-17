@@ -456,15 +456,17 @@
 </script>
 <script>
     (function() {
-        // auto-reload admin order list when a new order arrives
+
         function getCurrentMaxId() {
             const containers = document.querySelectorAll('.transaction-container1');
             let max = 0;
+
             containers.forEach(c => {
                 const id = c.id && c.id.replace('transcation-container-', '');
                 const n = parseInt(id, 10);
                 if (!isNaN(n) && n > max) max = n;
             });
+
             return max;
         }
 
@@ -474,21 +476,89 @@
             try {
                 const res = await fetch('/api/orders?range=monthly');
                 if (!res.ok) return;
+
                 const data = await res.json();
                 const orders = data.orders || [];
-                let max = 0;
+
+                let serverMax = 0;
+
+                // get latest order id from server
                 orders.forEach(o => {
-                    if (o.id && o.id > max) max = o.id;
+                    if (o.id && o.id > serverMax) serverMax = o.id;
                 });
-                if (max > currentMax) {
-                    location.reload();
+
+                // ONLY if there is new order
+                if (serverMax > currentMax) {
+
+                    // find ONLY new orders
+                    const newOrders = orders.filter(o => o.id > currentMax);
+
+                    newOrders.forEach(order => {
+                        addOrderToDOM(order);
+                    });
+
+                    currentMax = serverMax;
                 }
+
             } catch (e) {
-                // ignore
+                console.error("Polling error:", e);
             }
         }
 
+        function addOrderToDOM(order) {
+            const container = document.querySelector('.orders');
+
+            const div = document.createElement('div');
+            div.className = 'transaction-container1';
+            div.id = `transcation-container-${order.id}`;
+            div.setAttribute('data-order-id', `SPC2024-${order.id}`);
+            div.setAttribute('data-user-name', order.customer_name);
+
+            div.innerHTML = `
+            <div class="orders-detail">
+                <iconify-icon 
+                    id="circle-main-${order.id}" 
+                    icon="material-symbols-light:circle"
+                    style="color: ${order.status === 'Pending' ? '#FFD700' : '#008000'}">
+                </iconify-icon>
+            </div>
+
+            <div class="orders-details">
+                <span>Status</span>
+                <span id="status-name-${order.id}">${order.status}</span>
+            </div>
+
+            <div class="orders-details">
+                <span>Amount</span>
+                <span>₱ ${order.total}</span>
+            </div>
+
+            <div class="orders-details">
+                <span>School ID</span>
+                <span>${order.school_id ?? '-'}</span>
+            </div>
+
+            <div class="orders-details">
+                <span>Order ID</span>
+                <span>SPC2024-${order.id}</span>
+            </div>
+
+            <div class="orders-detailed open-modal4" data-order-id="${order.id}">
+                <span>Details</span>
+            </div>
+        `;
+
+            // ADD TO TOP (REAL TIME FEEL)
+            container.prepend(div);
+
+            // rebind modal click
+            div.querySelector('.open-modal4').addEventListener('click', () => {
+                openOrderModal(order.id);
+            });
+        }
+
         setInterval(pollNewOrders, 5000);
+
     })();
 </script>
 @endsection

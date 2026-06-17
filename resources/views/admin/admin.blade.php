@@ -56,7 +56,9 @@
                     </div>
                     <div class="percentage-days">
                         <img id="arrow-icon" src="images/arrow-icon.png">
-                        <p id="days">4% (30 days)</p>
+                        <p id="days">
+                            {{ $totalOrdersPercent >= 0 ? '+' : '' }}{{ $totalOrdersPercent }}% (30 days)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -75,7 +77,9 @@
                     </div>
                     <div class="percentage-days">
                         <img id="arrow-icon" src="images/arrow-icon.png">
-                        <p id="days">4% (30 days)</p>
+                        <p id="days">
+                            {{ $completedPercent >= 0 ? '+' : '' }}{{ $completedPercent }}% (30 days)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -94,7 +98,9 @@
                     </div>
                     <div class="percentage-days">
                         <img id="arrow-icon" src="images/arrow-icon.png">
-                        <p id="days">4% (30 days)</p>
+                        <p id="days">
+                            {{ $cancelledPercent >= 0 ? '+' : '' }}{{ $cancelledPercent }}% (30 days)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -113,7 +119,9 @@
                     </div>
                     <div class="percentage-days">
                         <img id="arrow-icon" src="images/arrow-icon.png">
-                        <p id="days">4% (30 days)</p>
+                        <p id="days">
+                            {{ $revenuePercent >= 0 ? '+' : '' }}{{ $revenuePercent }}% (30 days)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -155,9 +163,9 @@
             <div class="orders-header">
                 <h3>Order List</h3>
                 <div class="orders-controls chart-controls">
-                    <button class="btn small active" data-range="monthly">Monthly</button>
+                    <button class="btn small" data-range="monthly">Monthly</button>
                     <button class="btn small" data-range="weekly">Weekly</button>
-                    <button class="btn small" data-range="today">Today</button>
+                    <button class="btn small active" data-range="today">Today</button>
                 </div>
             </div>
             <div class="orders-body">

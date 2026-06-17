@@ -1,5 +1,6 @@
 @extends('layouts.user')
 
+@section('page', 'favorite')
 @section('content')
 <div class="content">
     <div class="favorites-header">

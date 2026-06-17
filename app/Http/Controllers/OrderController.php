@@ -76,17 +76,100 @@ class OrderController extends Controller
 
     public function getStatistics()
     {
-        $totalOrders = Order::whereIn('status_id', [1, 2, 3, 4])->count();
-        $completedOrders = Order::where('status_id', 3)->get()->count();
-        $cancelledOrders = Order::where('status_id', 4)->get()->count();
-        $orders = Order::where('status_id', 3)->get();
+        $totalOrders = Order::count();
 
-        $totalRevenue = 0;
-        foreach ($orders as $order) {
-            $totalRevenue += $order->amount;
-        }
+        $completedOrders = Order::where('status_id', 3)->count();
 
-        return view('admin.admin', compact('totalOrders', 'completedOrders', 'cancelledOrders', 'totalRevenue'));
+        $cancelledOrders = Order::where('status_id', 4)->count();
+
+        $totalRevenue = Order::where('status_id', 3)->sum('amount');
+
+        /*
+    |--------------------------------------------------------------------------
+    | Last 30 Days vs Previous 30 Days
+    |--------------------------------------------------------------------------
+    */
+
+        $currentStart = Carbon::now()->subDays(30);
+        $previousStart = Carbon::now()->subDays(60);
+        $previousEnd = Carbon::now()->subDays(30);
+
+        // Total Orders
+        $currentOrders = Order::where('created_at', '>=', $currentStart)->count();
+
+        $previousOrders = Order::whereBetween('created_at', [
+            $previousStart,
+            $previousEnd
+        ])->count();
+
+        // Completed
+        $currentCompleted = Order::where('status_id', 3)
+            ->where('created_at', '>=', $currentStart)
+            ->count();
+
+        $previousCompleted = Order::where('status_id', 3)
+            ->whereBetween('created_at', [
+                $previousStart,
+                $previousEnd
+            ])
+            ->count();
+
+        // Cancelled
+        $currentCancelled = Order::where('status_id', 4)
+            ->where('created_at', '>=', $currentStart)
+            ->count();
+
+        $previousCancelled = Order::where('status_id', 4)
+            ->whereBetween('created_at', [
+                $previousStart,
+                $previousEnd
+            ])
+            ->count();
+
+        // Revenue
+        $currentRevenue = Order::where('status_id', 3)
+            ->where('created_at', '>=', $currentStart)
+            ->sum('amount');
+
+        $previousRevenue = Order::where('status_id', 3)
+            ->whereBetween('created_at', [
+                $previousStart,
+                $previousEnd
+            ])
+            ->sum('amount');
+
+        /*
+    |--------------------------------------------------------------------------
+    | Percentage Calculation
+    |--------------------------------------------------------------------------
+    */
+
+        $totalOrdersPercent = $previousOrders > 0
+            ? round((($currentOrders - $previousOrders) / $previousOrders) * 100, 1)
+            : ($currentOrders > 0 ? 100 : 0);
+
+        $completedPercent = $previousCompleted > 0
+            ? round((($currentCompleted - $previousCompleted) / $previousCompleted) * 100, 1)
+            : ($currentCompleted > 0 ? 100 : 0);
+
+        $cancelledPercent = $previousCancelled > 0
+            ? round((($currentCancelled - $previousCancelled) / $previousCancelled) * 100, 1)
+            : ($currentCancelled > 0 ? 100 : 0);
+
+        $revenuePercent = $previousRevenue > 0
+            ? round((($currentRevenue - $previousRevenue) / $previousRevenue) * 100, 1)
+            : ($currentRevenue > 0 ? 100 : 0);
+
+        return view('admin.admin', compact(
+            'totalOrders',
+            'completedOrders',
+            'cancelledOrders',
+            'totalRevenue',
+            'totalOrdersPercent',
+            'completedPercent',
+            'cancelledPercent',
+            'revenuePercent'
+        ));
     }
 
     public function getChartData(Request $request)

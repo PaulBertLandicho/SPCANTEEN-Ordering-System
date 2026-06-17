@@ -1,5 +1,6 @@
 @extends('layouts.user')
 
+@section('page', 'history')
 @section('content')
 <div class="content">
     <div class="history-content">

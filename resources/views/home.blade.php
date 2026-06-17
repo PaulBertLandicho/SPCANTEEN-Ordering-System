@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 
+@section('page', 'menu')
+
 @section('content')
+
 @if (!Cookie::has('seenIntro'))
 @section('css', 'css/auth.css')
 <div class="onboarding-carousel">
