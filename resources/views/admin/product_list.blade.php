@@ -93,6 +93,24 @@
                             <div class="product-price">
                                 <input id="product-price" name="price" type="text" placeholder="₱ 0.00" style="text-align: center;" required>
                             </div>
+                            <div class="product-price">
+                                <input id="product-measurement" name="measurement" type="number" placeholder="Measurement" style="text-align: center;">
+                            </div>
+                            <div class="product-name" style="justify-content: center;">
+                                <select name="size" style="text-align: center;">
+                                    <option value="">Select Size</option>
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                </select>
+                                <select name="unit" style="text-align:center; margin-left:10px;">
+                                    <option value="">Select Unit</option>
+                                    <option value="ml">ml</option>
+                                    <option value="g">g</option>
+                                    <option value="oz">oz</option>
+                                    <option value="pcs">pcs</option>
+                                </select>
+                            </div>
                             <div class="product-time">
                                 <input id="product-time" name="time" type="text" placeholder="Estimated Time (In Minutes)" style="text-align: center;" required>
                             </div>
@@ -144,6 +162,24 @@
                             </div>
                             <div class="product-price">
                                 <input id="product-price" name="price" type="text" placeholder="₱ 0.00" style="text-align: center;">
+                            </div>
+                            <div class="product-price">
+                                <input id="product-measurement" name="measurement" type="number" placeholder="Measurement" style="text-align: center;">
+                            </div>
+                            <div class="product-name" style="justify-content: center;">
+                                <select id="product-size" name="size" style="text-align: center;">
+                                    <option value="">Select Size</option>
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                </select>
+                                <select id="product-unit" name="unit" style="text-align:center; margin-left:10px;">
+                                    <option value="">Select Unit</option>
+                                    <option value="ml">ml</option>
+                                    <option value="g">g</option>
+                                    <option value="oz">oz</option>
+                                    <option value="pcs">pcs</option>
+                                </select>
                             </div>
                             <div class="product-time">
                                 <input id="product-time" name="time" type="text" placeholder="Estimated Time (In Minutes)" style="text-align: center;">
@@ -221,6 +257,14 @@
                     editForm.querySelector("#product-price").value = productData.price;
                     editForm.querySelector("#product-time").value = productData.time;
                     editForm.querySelector("#product-categories").value = productData.category_id;
+                    editForm.querySelector("#product-size").value =
+                        productData.size ?? "";
+
+                    editForm.querySelector("#product-measurement").value =
+                        productData.measurement ?? "";
+
+                    editForm.querySelector("#product-unit").value =
+                        productData.unit ?? "";
                     document.getElementById("img-box-fill-edit").src = `images/product/${productData.image}`;
 
                     editForm.action = `/products/edit/${productId}`;
@@ -298,6 +342,9 @@
                     editForm.querySelector('#product-time').value = productData.time;
                     editForm.querySelector('#product-categories').value = productData.category_id;
                     document.getElementById('img-box-fill-edit').src = `images/product/${productData.image}`;
+                    editForm.querySelector('#product-size').value = productData.size ?? "";
+                    editForm.querySelector('#product-measurement').value = productData.measurement ?? "";
+                    editForm.querySelector('#product-unit').value = productData.unit ?? "";
                     editForm.action = `/products/edit/${productId}`;
                     editlistModal.classList.add('active');
                 });

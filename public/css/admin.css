@@ -708,6 +708,7 @@ h3 {
 
 .product-name,
 .product-price,
+.product-measurement,
 .product-time {
     display: flex;
     align-items: center;
@@ -757,6 +758,7 @@ h3 {
 
 .product-name label,
 .product-price label,
+.product-measurement label,
 .product-time label {
     margin-right: 10px;
     flex-shrink: 0;
@@ -768,6 +770,7 @@ h3 {
 
 #product-name,
 #product-price,
+#product-measurement,
 #product-time {
     height: 35px;
     border: none;
@@ -797,12 +800,14 @@ h3 {
 }
 #product-name:focus,
 #product-price:focus,
+#product-measurement:focus,
 #product-time:focus {
     outline: none;
 }
 
 #product-name::placeholder,
 #product-price::placeholder,
+#product-measurement::placeholder,
 #product-time::placeholder {
     color: maroon;
 }
@@ -813,6 +818,7 @@ h3 {
 
 #product-name::placeholder,
 #product-price::placeholder,
+#product-measurement::placeholder,
 #product-time::placeholder {
     color: maroon;
     text-align: center;

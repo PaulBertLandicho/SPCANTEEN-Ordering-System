@@ -227,11 +227,16 @@
                     <div class="product-info">
                         <div class="product-time">
                             <iconify-icon id="timer-icon" icon="svg-spinners:clock"></iconify-icon>
-                            <span id="product-time">{{$product->time}} mins</span>
+                            @if($product->display_size)
+                            <span style="margin-left: 10px; color: #666;">
+                                • {{ $product->display_size }}
+                            </span>
+                            @endif
                         </div>
+
                         <div class="product-name-price">
-                            <h1 id="product-name">{{$product->name}}</h1>
-                            <span id="products-price">₱{{$product->price}}</span>
+                            <h1 id="product-name">{{ $product->name }}</h1>
+                            <span id="products-price">₱{{ $product->price }}</span>
                         </div>
                     </div>
                 </div>

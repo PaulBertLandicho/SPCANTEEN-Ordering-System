@@ -19,6 +19,9 @@ return new class extends Migration
             $table->boolean('availability')->default(1);
             $table->unsignedBigInteger('category_id');
             $table->integer('time');
+            $table->string('size')->nullable();
+            $table->integer('measurement')->nullable();
+            $table->string('unit')->nullable();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories');

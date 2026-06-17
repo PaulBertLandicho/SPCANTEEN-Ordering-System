@@ -17,7 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('availability', 1)->get();
+        $products = Product::with('category')
+            ->where('availability', 1)
+            ->get();
 
         foreach ($products as $product) {
             $product->name = ucwords($product->name);
@@ -98,6 +100,9 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'size' => 'nullable|string|max:255',
+            'measurement' => 'nullable|string|max:255',
+            'unit' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:15000',
             'time' => 'required|integer',
             'category_id' => ['required', Rule::in([1, 2, 3, 4, 5, 6, 7])],
@@ -144,6 +149,9 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'size' => 'nullable|string|max:255',
+            'measurement' => 'nullable|string|max:255',
+            'unit' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:15000',
             'time' => 'required|integer',
             'availability' => 'required|boolean',
@@ -152,6 +160,9 @@ class ProductController extends Controller
 
         $product->name = $request->input('name');
         $product->price = $request->input('price');
+        $product->size = $request->input('size');
+        $product->measurement = $request->input('measurement');
+        $product->unit = $request->input('unit');
         $product->time = $request->input('time');
         $product->category_id = $request->input('category_id');
         $product->availability = $request->input('availability');

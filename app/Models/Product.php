@@ -12,10 +12,36 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
+        'size',
+        'measurement',
+        'unit',
         'image',
         'time',
         'category_id',
     ];
+
+    public function getDisplaySizeAttribute()
+    {
+        $parts = [];
+
+        // size (Small, Medium, Large)
+        if (!empty($this->size)) {
+            $parts[] = $this->size;
+        }
+
+        // measurement + unit (12oz, 500ml)
+        $measurement = '';
+
+        if (!empty($this->measurement) && !empty($this->unit)) {
+            $measurement = $this->measurement . $this->unit;
+        }
+
+        if (!empty($measurement)) {
+            $parts[] = $measurement;
+        }
+
+        return count($parts) ? implode(' - ', $parts) : null;
+    }
 
     public function setNameAttribute($value)
     {
