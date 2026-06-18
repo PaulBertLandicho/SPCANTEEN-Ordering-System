@@ -34,6 +34,9 @@
                                             <h1 id="cart-name">{{$cart->product->name}}</h1>
                                             <span id="cart-time">{{$cart->product->time}} min</span>
                                         </div>
+                                        <span id="cart-size" style="display:block; font-size:13px; color:gray;">
+                                            • {{ $cart->product->size }} - {{ $cart->product->measurement }}{{ $cart->product->unit }}
+                                        </span>
                                         <button class="cart-delete" data-cart-id="{{$cart->id}}">
                                             <iconify-icon icon="ion:trash-sharp"></iconify-icon>
                                         </button>

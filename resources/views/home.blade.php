@@ -55,6 +55,9 @@
 </div>
 
 <script>
+    let currentProductId = null;
+    let isFavorite = false;
+
     const slides = document.querySelectorAll('.onboarding-slide');
     const dots = document.querySelectorAll('.dots label');
 
@@ -196,6 +199,7 @@
                     </div>
                     <div class="modal-btns">
                         <div class="quantity-btns">
+
                             <button type="button" class="quantity-minus" id="quantity-minus">
                                 <iconify-icon icon="ph:minus"></iconify-icon>
                             </button>
@@ -209,17 +213,37 @@
                             Add to cart
                         </button>
                     </div>
+                    <div class="variant-options">
+                        <h4>Select Size</h4>
+
+                        <div id="variant-radios">
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
     <div class="products" id="products">
-        @foreach ($products as $product)
-        <div class="product-container" data-category-id="{{ $product->category_id ?? 0 }}">
+        @foreach ($products as $variants)
+
+        @php
+        $product = $variants->first();
+        @endphp
+        <div
+            class="product-container open-product"
+            data-category-id="{{ $product->category_id ?? 0 }}">
             <div class="product-content">
                 <div class="product-image">
-                    <button class="show-modal" data-product='@json($product)'><img id="product-image" src="images/product/{{$product->image}}" alt="{{$product->name}}"></button>
-                    <button class="add-cart" data-product='@json($product)'>
+                    <button
+                        class="show-modal"
+                        <button
+                        type="button"
+                        class="show-modal"
+                        data-products='@json($variants->values())'><img id="product-image" src="images/product/{{$product->image}}" alt="{{$product->name}}"></button>
+                    <button
+                        type="button"
+                        class="add-cart"
+                        data-products='@json($variants->values())'>
                         <iconify-icon id="add-icon" icon="ph:plus"></iconify-icon>
                     </button>
                 </div>
@@ -227,11 +251,14 @@
                     <div class="product-info">
                         <div class="product-time">
                             <iconify-icon id="timer-icon" icon="svg-spinners:clock"></iconify-icon>
-                            @if($product->display_size)
+                            <span style="margin-left: 10px; color: #008000;">
+                                min
+                            </span>
+                            <!-- @if($product->display_size)
                             <span style="margin-left: 10px; color: #666;">
                                 • {{ $product->display_size }}
                             </span>
-                            @endif
+                            @endif -->
                         </div>
 
                         <div class="product-name-price">
@@ -249,75 +276,242 @@
     </div>
     @include('layouts.components.user.user_navbar')
     <script>
-        // Client-side search + category filter: filter product cards by name and selected category
+        let selectedVariant = null;
+
+        /* =========================
+           ELEMENTS (IMPORTANT FIX)
+        ========================= */
+        const bottomSheet = document.getElementById("bottom-sheet");
+        const heartBtn = document.getElementById("heart-button");
+        const heartIcon = document.getElementById("heart-icon");
+
+        function setHeartUI(isFav) {
+            heartIcon.style.color = isFav ? "red" : "gray";
+        }
+
+        /* =========================
+           CHECK FAVORITE
+        ========================= */
+        async function checkFavorite(variantId) {
+            if (!variantId) return;
+
+            try {
+                const res = await fetch(`/favorite/check/${variantId}`);
+                const data = await res.json();
+
+                // only update if still same variant
+                if (selectedVariant && selectedVariant.id == variantId) {
+                    setHeartUI(data);
+                }
+            } catch (err) {
+                console.error("Check favorite failed:", err);
+            }
+        }
+
+        /* =========================
+           TOGGLE FAVORITE
+        ========================= */
+        async function toggleFavorite() {
+            if (!selectedVariant) return;
+
+            const variantId = selectedVariant.id;
+
+            try {
+                const res = await fetch(`/favorite/toggle/${variantId}`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "Accept": "application/json"
+                    }
+                });
+
+                const data = await res.json();
+                setHeartUI(data);
+
+            } catch (err) {
+                console.error("Toggle favorite failed:", err);
+            }
+        }
+
+        heartBtn.addEventListener("click", toggleFavorite);
+
+        function formatVariant(v) {
+            if (!v) return "";
+
+            const size = v.size ?? "";
+            const measurement = v.measurement ?? "";
+            const unit = v.unit ?? "";
+
+            let result = "";
+
+            if (size) result += size;
+
+            if (measurement) {
+                result += (result ? " - " : "") + measurement + unit;
+            }
+
+            return result;
+        }
+        /* =========================
+           OPEN PRODUCT MODAL
+        ========================= */
+        document.querySelectorAll(".show-modal").forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                const products = JSON.parse(this.dataset.products);
+                const first = products[0];
+
+                selectedVariant = first;
+
+                /* open modal */
+                bottomSheet.classList.add("show");
+
+                /* reset UI first */
+                setHeartUI(false);
+
+                /* fill UI */
+                document.querySelector(".name").textContent = first.name;
+                document.querySelector(".price").textContent = "₱" + first.price;
+                document.getElementById("selling-image").src = "/images/product/" + first.image;
+                document.getElementById("add-2-cart").dataset.product = JSON.stringify(first);
+
+                document.getElementById("add-2-cart").addEventListener("click", function(e) {
+                    e.preventDefault();
+
+                    const product = JSON.parse(this.dataset.product || "{}");
+                    if (!product.id) return;
+
+                    fetch(`/cart/store/product/${product.id}?quantity=${window.appState.currentQuantity}`)
+                        .then(r => r.json())
+                        .then(() => {
+                            updateCartCount();
+                            hideBottomSheet();
+                        })
+                        .catch(console.error);
+                });
+
+                /* render variants */
+                const radioContainer = document.getElementById("variant-radios");
+                radioContainer.innerHTML = "";
+
+                products.forEach((product, index) => {
+                    const label = document.createElement("label");
+                    label.style.display = "block";
+
+                    label.innerHTML = `
+    <input type="radio" name="variant" value="${product.id}" ${index === 0 ? "checked" : ""}>
+    ${formatVariant(product)}
+`;
+
+                    radioContainer.appendChild(label);
+                });
+
+                /* REMOVE OLD LISTENERS + SAFE REBIND */
+                setTimeout(() => {
+                    document.querySelectorAll('input[name="variant"]').forEach(radio => {
+                        radio.addEventListener("change", function() {
+
+                            const variant = products.find(p => p.id == this.value);
+                            selectedVariant = variant;
+
+                            /* reset first */
+                            setHeartUI(false);
+
+                            /* update UI */
+                            document.querySelector(".name").textContent = variant.name;
+                            document.querySelector(".price").textContent = "₱" + variant.price;
+                            document.getElementById("selling-image").src = "/images/product/" + variant.image;
+                            document.getElementById("add-2-cart").dataset.product = JSON.stringify(variant);
+
+                            /* IMPORTANT: check favorite AFTER UI update */
+                            checkFavorite(variant.id);
+                        });
+                    });
+                }, 0);
+
+                /* IMPORTANT: load correct favorite ONCE */
+                checkFavorite(first.id);
+            });
+        });
+
+        /* =========================
+           OPEN FROM CARD
+        ========================= */
+        document.querySelectorAll(".open-product").forEach(card => {
+            card.addEventListener("click", function(e) {
+                if (e.target.closest(".add-cart")) return;
+
+                const button = this.querySelector(".show-modal");
+                if (button) button.click();
+            });
+        });
+
+        /* =========================
+           CLOSE MODAL
+        ========================= */
+        document.querySelector(".sheet-overlay")
+            .addEventListener("click", () => {
+                bottomSheet.classList.remove("show");
+            });
+
+        /* =========================
+           SEARCH + CATEGORY FILTER
+        ========================= */
         (function() {
+
             const form = document.getElementById('search-form');
             const input = document.getElementById('searchInput');
             const categoryLinks = document.querySelectorAll('.categories .category a');
             const categoryLabel = document.getElementById('categories');
-            let selectedCategoryId = 0; // 0 = All
+
+            let selectedCategoryId = 0;
+
             if (!input) return;
+
             if (form) form.addEventListener('submit', e => e.preventDefault());
 
             function filterProducts() {
                 const q = input.value.trim().toLowerCase();
                 const cards = document.querySelectorAll('.product-container');
+
                 cards.forEach(card => {
                     const nameEl = card.querySelector('#product-name');
                     const name = nameEl ? nameEl.textContent.trim().toLowerCase() : '';
                     const catId = parseInt(card.dataset.categoryId || 0, 10);
-                    const matchesQuery = (q === '' || name.indexOf(q) !== -1);
-                    const matchesCategory = (selectedCategoryId === 0 || catId === selectedCategoryId);
-                    if (matchesQuery && matchesCategory) card.style.display = '';
-                    else card.style.display = 'none';
+
+                    const matchQuery = !q || name.includes(q);
+                    const matchCat = selectedCategoryId === 0 || catId === selectedCategoryId;
+
+                    card.style.display = (matchQuery && matchCat) ? '' : 'none';
                 });
 
-                // show/hide "no products" message
                 const noEl = document.getElementById('no-products');
                 if (noEl) {
-                    const visibleCount = Array.from(cards).filter(c => c.style.display !== 'none').length;
-                    const catText = categoryLabel ? categoryLabel.textContent.trim() : 'All';
-                    if (visibleCount === 0) {
-                        if (q !== '') noEl.textContent = `No products match "${q}" in ${catText}`;
-                        else noEl.textContent = (selectedCategoryId === 0) ? 'No products available' : `No products added in ${catText}`;
-                        noEl.style.display = '';
-                    } else {
-                        noEl.style.display = 'none';
-                    }
+                    const visible = [...cards].filter(c => c.style.display !== 'none').length;
+
+                    noEl.style.display = visible ? 'none' : 'block';
                 }
             }
 
-            // Wire category clicks
             categoryLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const parent = link.closest('.category');
-                    const id = parseInt(link.getAttribute('data-category-id') || '0', 10);
+
+                    const id = parseInt(link.dataset.categoryId || 0, 10);
                     selectedCategoryId = id;
 
-                    // update active class
-                    document.querySelectorAll('.categories .category').forEach(c => c.classList.remove('active'));
-                    if (parent) parent.classList.add('active');
+                    document.querySelectorAll('.categories .category')
+                        .forEach(c => c.classList.remove('active'));
 
-                    // update label text
-                    const txtEl = parent ? parent.querySelector('.icon-text') : null;
-                    if (categoryLabel && txtEl) categoryLabel.textContent = txtEl.textContent || 'All';
+                    link.closest('.category')?.classList.add('active');
 
                     filterProducts();
                 });
             });
 
             input.addEventListener('input', filterProducts);
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') e.target.blur();
-            });
 
-            // Initialize: ensure "All" category is active
-            const allLink = document.querySelector('.categories .category a[data-category-id="0"]');
-            if (allLink) {
-                const allParent = allLink.closest('.category');
-                if (allParent) allParent.classList.add('active');
-            }
         })();
     </script>
 </div>

@@ -12,12 +12,14 @@ class Favorite extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'product_variant_id', // ADD THIS
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
+
 
     public function getAvailabilityAttribute()
     {

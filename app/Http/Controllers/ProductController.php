@@ -17,13 +17,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')
-            ->where('availability', 1)
-            ->get();
-
-        foreach ($products as $product) {
-            $product->name = ucwords($product->name);
-        }
+        $products = Product::where('availability', 1)
+            ->get()
+            ->map(function ($product) {
+                $product->name = ucwords($product->name);
+                return $product;
+            })
+            ->groupBy(function ($item) {
+                return strtolower(trim($item->name));
+            });
 
         return view('home', compact('products'));
     }

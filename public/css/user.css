@@ -1327,6 +1327,28 @@
     padding-bottom: 12vh;
 }
 
+.variant-options {
+    margin-top: -90px;
+}
+
+#variant-radios {
+    display: flex;
+    flex-wrap: wrap; /* allows items to move to next line */
+    gap: 12px 10px; /* row gap, column gap */
+    margin-top: 10px;
+}
+
+#variant-radios label {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#variant-radios input[type="radio"] {
+    margin-right: 6px;
+}
 .quantity-btns {
     display: flex;
     align-items: center;

@@ -365,22 +365,30 @@ class OrderController extends Controller
 
     public function getOrderProducts($orderId)
     {
-        $carts = Cart::where('order_id', $orderId)->whereNotNull('order_id')->get();
+        $carts = Cart::where('order_id', $orderId)
+            ->whereNotNull('order_id')
+            ->with('product')
+            ->get();
 
         $formattedCarts = [];
+
         foreach ($carts as $cart) {
             if ($cart->product) {
                 $formattedCarts[] = [
                     'id' => $cart->id,
                     'product_name' => $cart->product->name,
                     'product_quantity' => $cart->quantity,
+
+                    // ✅ FROM PRODUCTS TABLE
+                    'product_size' => $cart->product->size,
+                    'product_measurement' => $cart->product->measurement,
+                    'product_unit' => $cart->product->unit,
                 ];
             }
         }
 
         return response()->json($formattedCarts);
     }
-
     public function getOrderDetails2($orderId)
     {
         $order = Order::where('id', $orderId)->whereIn('status_id', [3, 4])->first();
@@ -490,6 +498,27 @@ class OrderController extends Controller
         return redirect('/qr-code');
     }
 
+    public function getLatestOrders(Request $request)
+    {
+        $lastId = $request->query('last_id', 0);
+
+        $orders = Order::where('id', '>', $lastId)
+            ->whereIn('status_id', [1, 2])
+            ->orderBy('id', 'asc')
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'status' => $order->status->name,
+                    'status_id' => $order->status_id,
+                    'total' => $order->amount,
+                    'school_id' => $order->user->school_id,
+                    'customer_name' => $order->user->name,
+                ];
+            });
+
+        return response()->json($orders);
+    }
     /**
      * Display the specified resource.
      */

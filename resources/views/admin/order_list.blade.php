@@ -173,14 +173,14 @@
                     const seen = new Set();
 
                     products.forEach(p => {
-                        const key = `${p.product_id}-${p.product_name}`;
+                        const key = `${p.product_id}-${p.product_name} ${p.product_quantity} ${p.product_size} ${p.product_measurement} ${p.product_unit}`;
 
                         if (seen.has(key)) return;
                         seen.add(key);
 
                         const div = document.createElement('div');
                         div.className = 'orders-products-txt';
-                        div.innerHTML = `<span>${p.product_name} x${p.product_quantity}</span>`;
+                        div.innerHTML = `<span>${p.product_name} x${p.product_quantity} ${p.product_size} ${p.product_measurement} ${p.product_unit}</span>`;
 
                         list.appendChild(div);
                     });
@@ -222,7 +222,8 @@
                                         newProductItem.classList.add('orders-products-txt');
 
                                         const productNameSpan = document.createElement('span');
-                                        productNameSpan.textContent = `${cart.product_name} x${cart.product_quantity}`;
+                                        productNameSpan.textContent =
+                                            `${cart.product_name} x${cart.product_quantity} : ${cart.product_size} - ${cart.product_measurement}${cart.product_unit}`;
 
                                         newProductItem.appendChild(productNameSpan);
                                         ordersProductsList.appendChild(newProductItem);
@@ -319,7 +320,8 @@
                                     newProductItem.classList.add('orders-products-txt');
 
                                     const productNameSpan = document.createElement('span');
-                                    productNameSpan.textContent = `${cart.product_name} x${cart.product_quantity}`;
+                                    productNameSpan.textContent =
+                                        `${cart.product_name} x${cart.product_quantity} : ${cart.product_size} - ${cart.product_measurement}${cart.product_unit}`;
 
                                     newProductItem.appendChild(productNameSpan);
                                     ordersProductsList.appendChild(newProductItem);
@@ -462,7 +464,7 @@
             let max = 0;
 
             containers.forEach(c => {
-                const id = c.id && c.id.replace('transcation-container-', '');
+                const id = c.id.replace('transcation-container-', '');
                 const n = parseInt(id, 10);
                 if (!isNaN(n) && n > max) max = n;
             });
@@ -470,38 +472,22 @@
             return max;
         }
 
-        let currentMax = getCurrentMaxId();
+        let lastId = getCurrentMaxId();
 
         async function pollNewOrders() {
             try {
-                const res = await fetch('/api/orders?range=monthly');
-                if (!res.ok) return;
+                const res = await fetch(`/api/orders/latest?last_id=${lastId}`);
+                const orders = await res.json();
 
-                const data = await res.json();
-                const orders = data.orders || [];
+                if (!orders.length) return;
 
-                let serverMax = 0;
-
-                // get latest order id from server
-                orders.forEach(o => {
-                    if (o.id && o.id > serverMax) serverMax = o.id;
+                orders.forEach(order => {
+                    addOrderToDOM(order);
+                    lastId = Math.max(lastId, order.id);
                 });
 
-                // ONLY if there is new order
-                if (serverMax > currentMax) {
-
-                    // find ONLY new orders
-                    const newOrders = orders.filter(o => o.id > currentMax);
-
-                    newOrders.forEach(order => {
-                        addOrderToDOM(order);
-                    });
-
-                    currentMax = serverMax;
-                }
-
-            } catch (e) {
-                console.error("Polling error:", e);
+            } catch (err) {
+                console.error("Polling error:", err);
             }
         }
 
@@ -519,7 +505,7 @@
                 <iconify-icon 
                     id="circle-main-${order.id}" 
                     icon="material-symbols-light:circle"
-                    style="color: ${order.status === 'Pending' ? '#FFD700' : '#008000'}">
+                    style="color: ${order.status_id == 1 ? '#FFD700' : '#008000'}">
                 </iconify-icon>
             </div>
 
@@ -548,16 +534,14 @@
             </div>
         `;
 
-            // ADD TO TOP (REAL TIME FEEL)
             container.prepend(div);
 
-            // rebind modal click
             div.querySelector('.open-modal4').addEventListener('click', () => {
                 openOrderModal(order.id);
             });
         }
 
-        setInterval(pollNewOrders, 5000);
+        setInterval(pollNewOrders, 3000);
 
     })();
 </script>

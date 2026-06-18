@@ -46,11 +46,12 @@ Route::middleware(['logged-in'])->group(function () {
             Route::get('/product/category/name/{categoryId}', [ProductController::class, 'getCategoryName']);
             Route::get('/cart/store/product/{product}', [CartController::class, 'store']);
             Route::get('/cart/show/product/inside', [CartController::class, 'show']);
-            Route::get('/favorite/add/{product}', [FavoriteController::class, 'addDeleteFavorite']);
+
             Route::get('/favorite/show/{product}', [FavoriteController::class, 'showFavorite']);
             Route::get('/cart/store/single/product/{product}', [CartController::class, 'SingleStoreToCart']);
             Route::get('/product/search/{product}', [ProductController::class, 'searchProduct']);
-
+            Route::post('/favorite/toggle/{id}', [FavoriteController::class, 'addDeleteFavorite']);
+            Route::get('/favorite/check/{id}', [FavoriteController::class, 'showFavorite']);
             Route::get('/favorite', [FavoriteController::class, 'index'])->middleware(MakeCookieForFadeOutTitle::class);
             Route::get('/favorite/remove/{productId}', [FavoriteController::class, 'removeFavorite']);
 
@@ -86,7 +87,7 @@ Route::middleware(['logged-in'])->group(function () {
         Route::get('/administrator', [OrderController::class, 'getStatistics']);
         Route::get('/api/chart/data', [OrderController::class, 'getChartData']);
         Route::get('/api/admin/stats', [OrderController::class, 'getAdminStats']);
-
+        Route::get('/api/orders/latest', [OrderController::class, 'getLatestOrders']);
         // API: Orders chart data (range: today|weekly|monthly)
         Route::get('/api/chart/orders', function (Request $request) {
             $range = $request->query('range', 'weekly');

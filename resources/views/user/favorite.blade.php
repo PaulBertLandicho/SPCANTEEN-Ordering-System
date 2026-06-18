@@ -95,6 +95,13 @@
                         Add to cart
                     </button>
                 </div>
+                @if($favorite->product->display_size)
+                <div class="variant-options">
+                    <span style="color: gray;">
+                        • Select Size: {{ $favorite->product->display_size }}
+                    </span>
+                </div>
+                @endif
             </div>
         </div>
     </form>

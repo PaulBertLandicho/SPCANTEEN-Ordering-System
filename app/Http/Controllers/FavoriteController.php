@@ -16,10 +16,12 @@ class FavoriteController extends Controller
         $cartData = Cart::where('user_id', $userId)->whereNull('order_id')->get();
         $productCount = $cartData->count();
 
-        $favorites = Favorite::where('user_id', $userId)->with('product')->whereHas('product', function ($query) {
-            $query->where('availability', 1);
-        })->get();
-
+        $favorites = Favorite::where('user_id', $userId)
+            ->with('product')
+            ->whereHas('product', function ($query) {
+                $query->where('availability', 1);
+            })
+            ->get();
         foreach ($favorites as $favorite) {
             $favorite['product_name'] = $favorite->product->name;
         }
@@ -27,45 +29,42 @@ class FavoriteController extends Controller
         return view('user.favorite', compact('favorites', 'productCount'));
     }
 
-    public function addDeleteFavorite($productId)
+    public function addDeleteFavorite($variantId)
     {
-        $product = Product::find($productId);
-        $userId = auth()->user()->id;
+        $userId = auth()->id();
 
-        $checkFavorite = Favorite::where('user_id', $userId)->where('product_id', $productId)->first();
+        $variant = Product::find($variantId);
 
-        if ($checkFavorite) {
-            $checkFavorite->delete();
+        if (!$variant) {
             return response()->json(false);
-        } else {
-            if (!$product) {
-                return response()->json(['error' => 'Invalid product ID'], 400);
-            } else {
-
-                $favorite = new Favorite();
-
-                $favorite->user_id = $userId;
-                $favorite->product_id = $productId;
-
-                $favorite->save();
-
-                return response()->json(true);
-            }
         }
+
+        $favorite = Favorite::where('user_id', $userId)
+            ->where('product_variant_id', $variantId)
+            ->first();
+
+        if ($favorite) {
+            $favorite->delete();
+            return response()->json(false);
+        }
+
+        Favorite::create([
+            'user_id' => $userId,
+            'product_id' => $variant->id,
+            'product_variant_id' => $variantId,
+        ]);
+
+        return response()->json(true);
     }
-
-    public function showFavorite($productId)
+    public function showFavorite($variantId)
     {
-
         $userId = auth()->user()->id;
 
-        $checkFavorite = Favorite::where('user_id', $userId)->where('product_id', $productId)->first();
+        $exists = Favorite::where('user_id', $userId)
+            ->where('product_variant_id', $variantId)
+            ->exists();
 
-        if ($checkFavorite) {
-            return response()->json(true);
-        } else {
-            return response()->json(false);
-        }
+        return response()->json($exists);
     }
 
     public function removeFavorite($productId)

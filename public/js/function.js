@@ -77,6 +77,15 @@ function openModal(product) {
     const price = document.querySelector(".price");
     const qty = document.getElementById("modal-quantity");
 
+    fetch(`/favorite/check/${product.id}`)
+        .then((r) => r.json())
+        .then((isFav) => {
+            const icon = document.getElementById("heart-icon");
+            if (icon) {
+                icon.style.color = isFav ? "red" : "lightgray";
+            }
+        });
+
     if (img) img.src = "images/product/" + product.image;
     if (name) name.textContent = product.name;
     if (price) price.textContent = "₱" + product.price;
@@ -108,20 +117,31 @@ function hideBottomSheet() {
    FAVORITE TOGGLE
 ========================= */
 
-function toggleFavorite() {
+async function toggleFavorite() {
     const id = window.appState.currentProductId;
     if (!id) return;
 
-    safeFetch(`/favorite/add/${id}`)
-        .then((data) => {
-            const icon = document.getElementById("heart-icon");
-            if (!icon) return;
+    try {
+        const res = await fetch(`/favorite/toggle/${id}`, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]',
+                ).content,
+                Accept: "application/json",
+            },
+        });
 
-            icon.style.color = data === true ? "maroon" : "lightgray";
-        })
-        .catch(console.error);
+        const data = await res.json();
+
+        const icon = document.getElementById("heart-icon");
+        if (!icon) return;
+
+        icon.style.color = data === true ? "red" : "lightgray";
+    } catch (err) {
+        console.error("Favorite toggle failed:", err);
+    }
 }
-
 /* =========================
    CART COUNT UPDATE
 ========================= */
@@ -167,7 +187,6 @@ document.addEventListener("click", function (e) {
 
         if (!product || !product.id) return;
         openModal(product);
-        openModal(product);
     }
 
     if (cartBtn) {
@@ -186,8 +205,8 @@ document.addEventListener("click", function (e) {
             .then(updateCartCount)
             .catch(console.error);
     }
-
     if (favBtn) {
+        if (!window.appState.currentProductId) return;
         toggleFavorite();
     }
 
