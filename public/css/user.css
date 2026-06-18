@@ -2,6 +2,7 @@
 
 .container {
     flex-direction: column;
+    height: 100%;
 }
 
 .dashboard-header {
@@ -126,7 +127,8 @@
 }
 
 .products {
-    max-height: 54vh;
+    max-height: 55vh;
+    margin-top: -7px;
     overflow-y: auto;
 }
 
@@ -773,7 +775,7 @@
     width: 100%;
     color: white;
     justify-content: space-around;
-    z-index: 2000;
+    /* z-index: 2000; */
 }
 
 .row {
@@ -1328,13 +1330,13 @@
 }
 
 .variant-options {
-    margin-top: -90px;
+    margin-top: -65px;
 }
 
 #variant-radios {
     display: flex;
     flex-wrap: wrap; /* allows items to move to next line */
-    gap: 12px 10px; /* row gap, column gap */
+    gap: 12px 5px; /* row gap, column gap */
     margin-top: 10px;
 }
 

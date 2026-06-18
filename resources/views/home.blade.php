@@ -132,10 +132,6 @@
             document.getElementById("splash-screen").style.opacity = 0;
 
             setTimeout(function() {
-                document.getElementById("content").style.display = "block";
-            }, 1000);
-
-            setTimeout(function() {
                 document.getElementById("splash-screen").remove();
             }, 1500);
         }, 1000);
@@ -214,7 +210,7 @@
                         </button>
                     </div>
                     <div class="variant-options">
-                        <h4>Select Size</h4>
+                        <h4>Variant Options :</h4>
 
                         <div id="variant-radios">
                         </div>
@@ -251,8 +247,8 @@
                     <div class="product-info">
                         <div class="product-time">
                             <iconify-icon id="timer-icon" icon="svg-spinners:clock"></iconify-icon>
-                            <span style="margin-left: 10px; color: #008000;">
-                                min
+                            <span id="product-time" style="margin-left: 10px; color: #008000;">
+                                {{ $product->time }} mins
                             </span>
                             <!-- @if($product->display_size)
                             <span style="margin-left: 10px; color: #666;">
@@ -352,6 +348,25 @@
 
             return result;
         }
+
+        document.querySelectorAll(".add-cart").forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                const products = JSON.parse(this.dataset.products);
+                const product = products[0]; // default first variant
+
+                if (!product || !product.id) return;
+
+                fetch(`/cart/store/product/${product.id}?quantity=1`)
+                    .then(res => res.json())
+                    .then(() => {
+                        updateCartCount(); // if you already have this
+                    })
+                    .catch(console.error);
+            });
+        });
+
         /* =========================
            OPEN PRODUCT MODAL
         ========================= */

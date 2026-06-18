@@ -40,7 +40,7 @@
         <div class="product-container" id="product-container-{{$favorite->product->id}}">
             <div class="product-content">
                 <div class="product-image">
-                    <button class="show-modal" data-product="{{$favorite->product}}">
+                    <button class="show-modal" data-product='@json($favorite->product)'>
                         <img id="product-image" src="images/product/{{$favorite->product->image}}" alt="{{$favorite->product->name}}">
                     </button>
                     <button class="favorite-heart-container" id="favorite-heart-container" data-product-id="{{$favorite->product->id}}">
@@ -95,13 +95,9 @@
                         Add to cart
                     </button>
                 </div>
-                @if($favorite->product->display_size)
-                <div class="variant-options">
-                    <span style="color: gray;">
-                        • Select Size: {{ $favorite->product->display_size }}
-                    </span>
+                <div class="variant-options" id="variant-options" style="display:none;">
+                    <span style="color: gray;" id="variant-text"></span>
                 </div>
-                @endif
             </div>
         </div>
     </form>
@@ -167,6 +163,7 @@
 
     showModalBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
+
             const product = JSON.parse(btn.dataset.product);
 
             document.getElementById("selling-image").src = "images/product/" + product.image;
@@ -174,6 +171,19 @@
             document.querySelector(".price").textContent = "₱" + product.price;
             document.getElementById("modal-quantity").innerHTML = 1;
             document.getElementById("add-2-cart").setAttribute('data-product-id', product.id);
+
+            // =========================
+            // ✅ VARIANT FIX (DISPLAY SIZE)
+            // =========================
+            const variantBox = document.getElementById("variant-options");
+            const variantText = document.getElementById("variant-text");
+
+            if (product.display_size && product.display_size.trim() !== "") {
+                variantBox.style.display = "block";
+                variantText.innerText = "• Select Size: " + product.display_size;
+            } else {
+                variantBox.style.display = "none";
+            }
 
             showBottomSheet();
         });
