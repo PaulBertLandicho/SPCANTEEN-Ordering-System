@@ -21,7 +21,58 @@
             <span id="preparing-txt">We already preparing your order <br> please wait.</span>
             @endif
 
+            <div id="reviewModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+
+                <div style="background:#fff; padding:20px; border-radius:10px; width:350px;">
+                    <h3>Rate your order</h3>
+
+                    <input type="hidden" id="review_product_id">
+                    <input type="hidden" id="rating" value="0">
+                    <div id="stars">
+                        ⭐⭐⭐⭐⭐
+                    </div>
+
+                    <div class="stars" id="starContainer">
+                        <span class="star" data-rating="1">⭐</span>
+                        <span class="star" data-rating="2">⭐</span>
+                        <span class="star" data-rating="3">⭐</span>
+                        <span class="star" data-rating="4">⭐</span>
+                        <span class="star" data-rating="5">⭐</span>
+                    </div>
+                    <textarea id="feedback" placeholder="Write feedback..." style="width:100%; margin-top:10px;"></textarea>
+
+                    <button onclick="submitReview()" style="margin-top:10px;">Submit</button>
+                </div>
+            </div>
+            @php
+            $firstItem = $order->items?->first();
+            @endphp
+            <style>
+                .stars {
+                    display: flex;
+                    gap: 8px;
+                    font-size: 30px;
+                    cursor: pointer;
+                }
+
+                .star {
+                    opacity: 0.3;
+                    transition: 0.2s;
+                }
+
+                .star.active {
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+            </style>
+
+            <script>
+                window.reviewProductId = null;
+            </script>
+
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
             <script type="text/javascript">
                 // Poll order status every 3 seconds and update UI in-place
@@ -60,6 +111,28 @@
                             }
                         }
                     }
+
+                    const stars = document.querySelectorAll('.star');
+                    const ratingInput = document.getElementById('rating');
+
+                    stars.forEach(star => {
+                        star.addEventListener('click', () => {
+                            const rating = parseInt(star.dataset.rating);
+
+                            // set hidden input value
+                            ratingInput.value = rating;
+
+                            // reset stars
+                            stars.forEach(s => s.classList.remove('active'));
+
+                            // activate correct stars
+                            stars.forEach(s => {
+                                if (parseInt(s.dataset.rating) <= rating) {
+                                    s.classList.add('active');
+                                }
+                            });
+                        });
+                    });
 
                     function showPreparing() {
                         const qrcodeEl = document.getElementById('qrcode');
@@ -118,18 +191,11 @@
                                 if (!successShown) {
                                     successShown = true;
 
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Order Completed!',
-                                        text: 'Your order has been successfully completed.',
-                                        confirmButtonColor: '#00C853',
-                                        timer: 2500,
-                                        timerProgressBar: true,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        window.location.href = '/';
-                                    });
+                                    document.getElementById('reviewModal').style.display = 'flex';
+
+                                    // OPTIONAL: auto redirect after submit
                                 }
+
 
                             } else if (newStatus === 4) {
                                 // cancelled -> alert and redirect
@@ -149,8 +215,63 @@
                     // start polling
                     setInterval(pollStatus, 3000);
                 })();
+
+                async function submitReview() {
+                    const rating = document.getElementById('rating').value;
+                    const feedback = document.getElementById('feedback').value;
+
+                    if (!window.reviewProductId) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Missing Product',
+                            text: 'Product ID not found. Cannot submit review.'
+                        });
+                        return;
+                    }
+
+                    const res = await fetch('/review/store', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            order_id: "{{ $order->id }}",
+                            product_id: window.reviewProductId,
+                            rating: rating,
+                            feedback: feedback
+                        })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thank you!',
+                            text: 'Your review has been submitted.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        document.getElementById('reviewModal').style.display = 'none';
+
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1600);
+                    }
+                }
             </script>
         </div>
     </div>
 </div>
+<div id="review-data"
+    data-product-id="{{ $firstItem ? $firstItem->product_id : '' }}">
+</div>
+
+<script>
+    window.reviewProductId =
+        document.getElementById('review-data').dataset.productId;
+</script>
 @endsection

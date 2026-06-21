@@ -409,6 +409,18 @@ h3 {
     align-items: center;
     justify-content: center;
 }
+.message-circle-container {
+    margin-right: 5px;
+    margin-left: -20px;
+}
+.message-circle {
+    background-color: #fff;
+    color: maroon;
+    border-radius: 5px;
+    font-family: "Montserrat";
+    cursor: pointer;
+    font-size: 20px;
+}
 
 .tabler-edit {
     background-color: #fff;
@@ -860,6 +872,137 @@ h3 {
 }
 
 /* Edit Product Modal CSS */
+
+.modal_feedback {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal_feedback.active {
+    display: flex;
+}
+
+.feedback-modal-box {
+    width: 420px;
+    max-height: 70vh;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* HEADER */
+.feedback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px;
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close-feedback {
+    cursor: pointer;
+    font-size: 22px;
+    color: #666;
+}
+
+/* LIST */
+.feedback-list {
+    padding: 14px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* EMPTY STATE */
+.empty-feedback {
+    text-align: center;
+    color: #888;
+    margin-top: 30px;
+}
+
+/* FEEDBACK CARD */
+.feedback-item {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid maroon;
+}
+
+.feedback-user {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.feedback-rating {
+    font-size: 13px;
+    color: #f5a623;
+    margin: 4px 0;
+}
+
+.feedback-text {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.4;
+}
+
+.modal-container {
+    background: white;
+    padding: 20px;
+    width: 400px;
+    border-radius: 10px;
+}
+.best-seller-badge {
+    position: absolute;
+    top: 10px;
+    left: 70px;
+
+    background: rgba(255, 255, 255, 0.5);
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    z-index: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.rating-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    background: rgba(255, 255, 255, 0.5);
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    z-index: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
 
 .modal_edit-list {
     display: flex;

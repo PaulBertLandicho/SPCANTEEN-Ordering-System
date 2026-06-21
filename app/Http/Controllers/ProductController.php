@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
-use App\Models\Favorite;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -17,28 +17,73 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('availability', 1)
+        $products = Product::with('reviews')
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->withCount([
+                'orderItems as sold_count' => function ($q) {
+                    $q->whereHas('order', function ($oq) {
+                        $oq->where('status_id', 3);
+                    });
+                }
+            ])
+            ->where('availability', 1)
             ->get()
-            ->map(function ($product) {
-                $product->name = ucwords($product->name);
-                return $product;
-            })
-            ->groupBy(function ($item) {
-                return strtolower(trim($item->name));
-            });
-
-        return view('home', compact('products'));
+            ->groupBy(fn($item) => strtolower(trim($item->name)));
+        //  BEST SELLERS (based on completed orders)
+        $bestSellers = Product::withAvg('reviews', 'rating')
+            ->withCount([
+                'orderItems as sold_count' => function ($q) {
+                    $q->whereHas('order', function ($oq) {
+                        $oq->where('status_id', 3);
+                    });
+                }
+            ])
+            ->where('availability', 1)
+            ->orderByDesc('sold_count')
+            ->take(6)
+            ->get();
+        return view('home', compact('products', 'bestSellers'));
     }
-
     public function adminIndex()
     {
-        $products = Product::all();
-        foreach ($products as $product) {
-            $product->name = ucwords($product->name);
-        }
+        $products = Product::with('reviews')
+            ->withAvg('reviews', 'rating')
+            ->withCount([
+                'orderItems as sold_count' => function ($q) {
+                    $q->whereHas('order', function ($oq) {
+                        $oq->where('status_id', 3);
+                    });
+                }
+            ])
+            ->get();
+        // TOP 6 BEST SELLERS
+        $bestSellers = Product::withAvg('reviews', 'rating')
+            ->withCount([
+                'orderItems as sold_count' => function ($q) {
+                    $q->whereHas('order', function ($oq) {
+                        $oq->where('status_id', 3);
+                    });
+                }
+            ])
+            ->where('availability', 1)
+            ->orderByDesc('sold_count')
+            ->take(6)
+            ->get();
 
         $categories = Category::all();
-        return view('admin.product_list', compact('products', 'categories'));
+
+        return view('admin.product_list', compact('products', 'categories', 'bestSellers'));
+    }
+    public function reviews($id)
+    {
+        $reviews = Product::findOrFail($id)
+            ->reviews()
+            ->with('user')
+            ->latest()
+            ->get();
+
+        return response()->json($reviews);
     }
 
     public function getProductsByCategory($id)
@@ -138,7 +183,9 @@ class ProductController extends Controller
         $product = Product::where('id', $id)->first();
 
         // dd($product);
-        return response()->json($product);
+        return response()->json(
+            Product::findOrFail($id)
+        );
     }
 
     /**

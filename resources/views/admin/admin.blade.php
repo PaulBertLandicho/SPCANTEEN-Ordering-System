@@ -112,7 +112,7 @@
                 </div>
                 <div class="sales-txt">
                     <div class="header">
-                        <h3 id="total-revenue">{{$totalRevenue}}</h3>
+                        <h3 id="total-revenue">₱{{ number_format($totalRevenue, 2) }}</h3>
                     </div>
                     <div class="total-completed">
                         <p>Total Revenue</p>
@@ -520,7 +520,8 @@
                     document.getElementById('cancelled-orders').innerText = stats.cancelledOrders;
                 }
                 if (parseFloat(stats.totalRevenue) !== parseFloat(lastStats.totalRevenue)) {
-                    document.getElementById('total-revenue').innerText = stats.totalRevenue;
+                    document.getElementById('total-revenue').innerText =
+                        '₱' + parseFloat(stats.totalRevenue).toFixed(2);
                 }
 
                 // if any stat changed, refresh charts and orders list

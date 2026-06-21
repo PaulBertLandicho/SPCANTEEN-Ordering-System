@@ -35,4 +35,17 @@ class Order extends Model
     {
         return $this->hasMany(Cart::class);
     }
+    public function products()
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'order_product',
+            'order_id',
+            'product_id'
+        );
+    }
+    public function items()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

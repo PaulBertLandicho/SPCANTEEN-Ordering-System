@@ -32,7 +32,26 @@
         @else
         @foreach ($products as $product)
         <div class="product" data-product-id="{{$product->id}}">
-            <img id="product-img" src="images/product/{{$product->image}}" alt="{{$product->name}}">
+            <div class="badge-container">
+
+                <!-- Rating -->
+                <div class="rating-badge">
+                    ⭐ {{ number_format($product->reviews_avg_rating ?? 0, 1) }}
+                </div>
+
+                <!-- SOLD COUNT (always show) -->
+                <div class="best-seller-badge" style="margin-top: 30px; margin-left: -60px;">
+                    🔥 {{ $product->sold_count ?? 0 }} Sold
+                </div>
+
+                <!-- BEST SELLER LABEL (top 6 only) -->
+                @if($bestSellers->contains('id', $product->id))
+                <div class="best-seller-badge" style="background:#ff3b30;">
+                    🏆 Best Seller
+                </div>
+                @endif
+
+            </div> <img id="product-img" src="images/product/{{$product->image}}" alt="{{$product->name}}">
             @if ($product->availability == 0)
             <div class="label" style="background: linear-gradient(to top, gray, transparent);">
                 @else
@@ -41,6 +60,11 @@
                     <h3>{{$product->name}}</h3>
                     <div class="icon-container">
                         <div class="edit-delete-btns">
+                            <div class="message-circle-container">
+                                <button class="open-feedback-modal" data-product-id="{{ $product->id }}">
+                                    <iconify-icon icon="tabler:message-circle" class="message-circle"></iconify-icon>
+                                </button>
+                            </div>
                             <div class="edit-button">
                                 <button class="open-modal2" data-product-id="{{$product->id}}">
                                     @if ($product->availability == 0)
@@ -66,6 +90,23 @@
             </div>
             @endforeach
             @endif
+        </div>
+
+        <!--------- FeedBack Modal -------->
+
+        <div class="modal_feedback">
+            <div class="modal-container feedback-modal-box">
+
+                <div class="feedback-header">
+                    <h3>Customer Feedback</h3>
+                    <iconify-icon icon="close" class="close-feedback"></iconify-icon>
+                </div>
+
+                <div id="feedback-list" class="feedback-list">
+                    <p class="empty-feedback">Select a product to view feedback</p>
+                </div>
+
+            </div>
         </div>
 
         <!--------- Add Product Modal -------->
@@ -106,6 +147,7 @@
                                 <select name="unit" style="text-align:center; margin-left:10px;">
                                     <option value="">Select Unit</option>
                                     <option value="ml">ml</option>
+                                    <option value="L">L</option>
                                     <option value="g">g</option>
                                     <option value="oz">oz</option>
                                     <option value="pcs">pcs</option>
@@ -441,6 +483,59 @@
 
         document.getElementById('search').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') e.target.blur();
+        });
+
+        document.addEventListener("click", async function(e) {
+            const btn = e.target.closest(".open-feedback-modal");
+            if (!btn) return;
+
+            const productId = btn.dataset.productId;
+
+            const modal = document.querySelector(".modal_feedback");
+            const container = document.getElementById("feedback-list");
+
+            // OPEN MODAL FIRST (better UX)
+            modal.classList.add("active");
+            container.innerHTML = "<p>Loading feedback...</p>";
+
+            try {
+                const res = await fetch(`/products/${productId}/reviews`);
+
+                if (!res.ok) {
+                    throw new Error("HTTP " + res.status);
+                }
+
+                const data = await res.json();
+
+                container.innerHTML = "";
+
+                if (!data.length) {
+                    container.innerHTML = "<p>No feedback yet</p>";
+                    return;
+                }
+
+                data.forEach(r => {
+                    container.innerHTML += `
+                <div class="feedback-item">
+                    <strong>${r.user?.name ?? 'User'}</strong>
+                    <div>⭐ ${r.rating}</div>
+                    <p>${r.feedback ?? 'No comment provided'}</p>
+                </div>
+            `;
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = "<p>Failed to load feedback</p>";
+            }
+        });
+        document.querySelector(".close-feedback").addEventListener("click", () => {
+            document.querySelector(".modal_feedback").classList.remove("active");
+        });
+        document.querySelector(".modal_feedback").addEventListener("click", (e) => {
+            if (e.target.classList.contains("modal_feedback")) {
+                e.currentTarget.classList.remove("active");
+            }
         });
     </script>
     @endsection

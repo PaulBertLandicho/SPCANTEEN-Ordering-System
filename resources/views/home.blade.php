@@ -189,6 +189,12 @@
                     <button type="button" class="heart-button" id="heart-button">
                         <iconify-icon id="heart-icon" icon="material-symbols:favorite"></iconify-icon>
                     </button>
+                    <div class="rating-badge-modal">
+                        ⭐ <span id="modal-rating">0.0</span>
+                        <span style="font-size:10px;">
+                            (<span id="modal-rating-count">0</span>)
+                        </span>
+                    </div>
                     <div class="product-detail">
                         <h2 class="name">No Product</h2>
                         <p class="price">₱0</p>
@@ -219,55 +225,118 @@
             </div>
         </form>
     </div>
+    @if($bestSellers->count())
+    <div class="best-seller-section">
+
+        @foreach($bestSellers as $product)
+
+        {{-- Best seller card here --}}
+
+        @endforeach
+
+    </div>
+    @endif
+
     <div class="products" id="products">
+
         @foreach ($products as $variants)
 
         @php
         $product = $variants->first();
         @endphp
-        <div
-            class="product-container open-product"
+
+        <div class="product-container open-product"
             data-category-id="{{ $product->category_id ?? 0 }}">
+
             <div class="product-content">
+
                 <div class="product-image">
-                    <button
+
+                    <!-- Rating Badge -->
+                    <div class="rating-badge">
+                        ⭐ {{ number_format($product->reviews_avg_rating ?? 0, 1) }}
+                        <span style="font-size:11px;">
+                            ({{ $product->reviews_count ?? 0 }})
+                        </span>
+                    </div>
+
+                    <!-- Best Seller Badge -->
+                    @if(($product->sold_count ?? 0) >= 10)
+                    <div class="best-seller-badge" style="background:#ff3b30;">
+                        🔥 Best Sellers
+                    </div>
+                    @endif
+
+                    <button type="button"
                         class="show-modal"
-                        <button
-                        type="button"
-                        class="show-modal"
-                        data-products='@json($variants->values())'><img id="product-image" src="images/product/{{$product->image}}" alt="{{$product->name}}"></button>
-                    <button
-                        type="button"
+                        data-products='@json($variants->values())'>
+
+                        <img id="product-image"
+                            src="images/product/{{ $product->image }}"
+                            alt="{{ $product->name }}">
+                    </button>
+
+                    <button type="button"
                         class="add-cart"
                         data-products='@json($variants->values())'>
-                        <iconify-icon id="add-icon" icon="ph:plus"></iconify-icon>
+
+                        <iconify-icon
+                            id="add-icon"
+                            icon="ph:plus">
+                        </iconify-icon>
+
                     </button>
+
                 </div>
+
                 <div class="products-info">
                     <div class="product-info">
+
                         <div class="product-time">
-                            <iconify-icon id="timer-icon" icon="svg-spinners:clock"></iconify-icon>
-                            <span id="product-time" style="margin-left: 10px; color: #008000;">
+                            <iconify-icon
+                                id="timer-icon"
+                                icon="svg-spinners:clock">
+                            </iconify-icon>
+
+                            <span id="product-time"
+                                style="margin-left:10px;color:#008000;">
                                 {{ $product->time }} mins
                             </span>
-                            <!-- @if($product->display_size)
-                            <span style="margin-left: 10px; color: #666;">
+
+                            {{-- Optional size display --}}
+                            {{--
+                        @if($product->display_size)
+                            <span style="margin-left:10px;color:#666;">
                                 • {{ $product->display_size }}
                             </span>
-                            @endif -->
+                            @endif
+                            --}}
                         </div>
 
                         <div class="product-name-price">
-                            <h1 id="product-name">{{ $product->name }}</h1>
-                            <span id="products-price">₱{{ $product->price }}</span>
+                            <h1 id="product-name">
+                                {{ $product->name }}
+                            </h1>
+
+                            <span id="products-price">
+                                ₱{{ number_format($product->price, 2) }}
+                            </span>
                         </div>
+
                     </div>
                 </div>
+
             </div>
+
         </div>
+
         @endforeach
+
     </div>
-    <div id="no-products" class="no-products" style="display:none; text-align:center; padding:18px 10px; color:gray;">
+
+    <div id="no-products"
+        class="no-products"
+        style="display:none;text-align:center;padding:18px 10px;color:gray;">
         No product added
     </div>
     @include('layouts.components.user.user_navbar')
@@ -390,7 +459,11 @@
                 document.querySelector(".price").textContent = "₱" + first.price;
                 document.getElementById("selling-image").src = "/images/product/" + first.image;
                 document.getElementById("add-2-cart").dataset.product = JSON.stringify(first);
+                document.getElementById("modal-rating").textContent =
+                    Number(first.reviews_avg_rating ?? 0).toFixed(1);
 
+                document.getElementById("modal-rating-count").textContent =
+                    first.reviews_count ?? 0;
                 document.getElementById("add-2-cart").addEventListener("click", function(e) {
                     e.preventDefault();
 
@@ -438,7 +511,9 @@
                             document.querySelector(".price").textContent = "₱" + variant.price;
                             document.getElementById("selling-image").src = "/images/product/" + variant.image;
                             document.getElementById("add-2-cart").dataset.product = JSON.stringify(variant);
-
+                            // ⭐ ADD THIS
+                            document.getElementById("modal-rating").textContent =
+                                Number(variant.reviews_avg_rating ?? 0).toFixed(1);
                             /* IMPORTANT: check favorite AFTER UI update */
                             checkFavorite(variant.id);
                         });

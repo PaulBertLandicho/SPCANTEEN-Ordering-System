@@ -12,6 +12,7 @@ use App\Http\Middleware\CheckIfUserHasProductInCart;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\CheckUserHasRole;
 use App\Http\Middleware\MakeCookieForFadeOutTitle;
+use App\Http\Controllers\ProductReviewController;
 use App\Http\Middleware\PreventRegister;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -32,7 +33,8 @@ Route::get('/setup', function () {
 })->middleware(CheckUserHasRole::class);
 
 Route::post('/setup', [UserController::class, 'setup']);
-
+Route::get('/products/{id}/reviews', [ProductController::class, 'reviews']);
+Route::post('/review/store', [ProductReviewController::class, 'store']);
 Route::get('/register', function () {
     return view('register');
 })->middleware(PreventRegister::class);
